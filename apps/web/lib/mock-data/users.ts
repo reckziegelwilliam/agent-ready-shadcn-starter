@@ -1,0 +1,61 @@
+export interface MockUser {
+  id: string;
+  name: string;
+  email: string;
+  role: "admin" | "editor" | "viewer";
+  status: "active" | "inactive" | "pending";
+  createdAt: string;
+}
+
+export const mockUsers: MockUser[] = [
+  { id: "usr_001", name: "Alice Johnson", email: "alice.johnson@example.com", role: "admin", status: "active", createdAt: "2024-01-05T09:12:00Z" },
+  { id: "usr_002", name: "Bob Martinez", email: "bob.martinez@acmecorp.io", role: "editor", status: "active", createdAt: "2024-01-18T14:30:00Z" },
+  { id: "usr_003", name: "Carol Chen", email: "carol.chen@designhub.co", role: "viewer", status: "pending", createdAt: "2024-02-02T11:45:00Z" },
+  { id: "usr_004", name: "David Kim", email: "david.kim@techstart.dev", role: "editor", status: "active", createdAt: "2024-02-14T08:20:00Z" },
+  { id: "usr_005", name: "Elena Popov", email: "elena.popov@creativelabs.com", role: "admin", status: "active", createdAt: "2024-02-28T16:00:00Z" },
+  { id: "usr_006", name: "Frank Nguyen", email: "frank.nguyen@webflow.io", role: "viewer", status: "inactive", createdAt: "2024-03-10T10:30:00Z" },
+  { id: "usr_007", name: "Grace Williams", email: "grace.williams@dataops.net", role: "editor", status: "active", createdAt: "2024-03-22T13:15:00Z" },
+  { id: "usr_008", name: "Henry Takahashi", email: "henry.takahashi@finserve.com", role: "viewer", status: "pending", createdAt: "2024-04-01T09:00:00Z" },
+  { id: "usr_009", name: "Isabella Rossi", email: "isabella.rossi@marketpro.io", role: "admin", status: "active", createdAt: "2024-04-15T15:45:00Z" },
+  { id: "usr_010", name: "James O'Brien", email: "james.obrien@cloudnine.dev", role: "editor", status: "inactive", createdAt: "2024-04-28T07:30:00Z" },
+  { id: "usr_011", name: "Karen Svensson", email: "karen.svensson@nordictech.se", role: "viewer", status: "active", createdAt: "2024-05-06T12:00:00Z" },
+  { id: "usr_012", name: "Liam Patel", email: "liam.patel@innosoft.co.uk", role: "editor", status: "active", createdAt: "2024-05-19T10:20:00Z" },
+  { id: "usr_013", name: "Mia Thompson", email: "mia.thompson@brandwise.com", role: "viewer", status: "pending", createdAt: "2024-06-01T14:10:00Z" },
+  { id: "usr_014", name: "Nathan Lee", email: "nathan.lee@appforge.io", role: "admin", status: "active", createdAt: "2024-06-14T08:50:00Z" },
+  { id: "usr_015", name: "Olivia Davis", email: "olivia.davis@pixelcraft.co", role: "editor", status: "active", createdAt: "2024-06-30T16:30:00Z" },
+  { id: "usr_016", name: "Patrick Mueller", email: "patrick.mueller@autobahn.de", role: "viewer", status: "inactive", createdAt: "2024-07-08T11:00:00Z" },
+  { id: "usr_017", name: "Quinn Foster", email: "quinn.foster@saasly.com", role: "editor", status: "active", createdAt: "2024-07-21T09:40:00Z" },
+  { id: "usr_018", name: "Rachel Tanaka", email: "rachel.tanaka@zenworks.jp", role: "viewer", status: "active", createdAt: "2024-08-03T13:25:00Z" },
+  { id: "usr_019", name: "Samuel Adebayo", email: "samuel.adebayo@lagostech.ng", role: "admin", status: "pending", createdAt: "2024-08-16T07:15:00Z" },
+  { id: "usr_020", name: "Tina Eriksson", email: "tina.eriksson@flowstate.se", role: "editor", status: "active", createdAt: "2024-08-29T15:00:00Z" },
+  { id: "usr_021", name: "Umar Farooq", email: "umar.farooq@devhive.pk", role: "viewer", status: "inactive", createdAt: "2024-09-05T10:50:00Z" },
+  { id: "usr_022", name: "Victoria Santos", email: "victoria.santos@brasildev.com.br", role: "editor", status: "active", createdAt: "2024-09-18T12:30:00Z" },
+  { id: "usr_023", name: "William Chang", email: "william.chang@synergyai.com", role: "admin", status: "active", createdAt: "2024-09-30T08:00:00Z" },
+  { id: "usr_024", name: "Xena Papadopoulos", email: "xena.papa@athensdigital.gr", role: "viewer", status: "pending", createdAt: "2024-10-12T14:40:00Z" },
+  { id: "usr_025", name: "Yuki Watanabe", email: "yuki.watanabe@tokyolab.jp", role: "editor", status: "active", createdAt: "2024-10-25T09:20:00Z" },
+  { id: "usr_026", name: "Zachary Bennett", email: "zach.bennett@stackover.io", role: "viewer", status: "active", createdAt: "2024-11-03T11:10:00Z" },
+  { id: "usr_027", name: "Amara Okonkwo", email: "amara.okonkwo@naijabuild.ng", role: "admin", status: "active", createdAt: "2024-11-15T16:20:00Z" },
+  { id: "usr_028", name: "Boris Volkov", email: "boris.volkov@devcraft.ru", role: "editor", status: "inactive", createdAt: "2024-11-28T07:45:00Z" },
+  { id: "usr_029", name: "Chloe Dubois", email: "chloe.dubois@parisien.fr", role: "viewer", status: "active", createdAt: "2024-12-06T13:00:00Z" },
+  { id: "usr_030", name: "Daniel Park", email: "daniel.park@seoulsoft.kr", role: "editor", status: "pending", createdAt: "2024-12-19T10:35:00Z" },
+  { id: "usr_031", name: "Emma Richardson", email: "emma.richardson@londonops.co.uk", role: "admin", status: "active", createdAt: "2025-01-04T09:00:00Z" },
+  { id: "usr_032", name: "Felipe Morales", email: "felipe.morales@latamhub.mx", role: "viewer", status: "active", createdAt: "2025-01-17T14:50:00Z" },
+  { id: "usr_033", name: "Greta Hoffmann", email: "greta.hoffmann@berlintech.de", role: "editor", status: "active", createdAt: "2025-01-30T08:25:00Z" },
+  { id: "usr_034", name: "Hassan Ali", email: "hassan.ali@dubaidigital.ae", role: "viewer", status: "inactive", createdAt: "2025-02-11T12:15:00Z" },
+  { id: "usr_035", name: "Iris Johansson", email: "iris.johansson@scandify.se", role: "admin", status: "active", createdAt: "2025-02-24T15:40:00Z" },
+  { id: "usr_036", name: "Jack Robinson", email: "jack.robinson@aussiecode.com.au", role: "editor", status: "pending", createdAt: "2025-03-05T10:10:00Z" },
+  { id: "usr_037", name: "Keiko Yamamoto", email: "keiko.yamamoto@osakanet.jp", role: "viewer", status: "active", createdAt: "2025-03-18T13:30:00Z" },
+  { id: "usr_038", name: "Leo Fischer", email: "leo.fischer@swissdev.ch", role: "editor", status: "active", createdAt: "2025-03-29T07:55:00Z" },
+  { id: "usr_039", name: "Martina Kovac", email: "martina.kovac@prahasoft.cz", role: "viewer", status: "inactive", createdAt: "2025-04-08T11:20:00Z" },
+  { id: "usr_040", name: "Noah Campbell", email: "noah.campbell@vancotech.ca", role: "admin", status: "active", createdAt: "2025-04-21T16:00:00Z" },
+  { id: "usr_041", name: "Priya Sharma", email: "priya.sharma@mumbaiops.in", role: "editor", status: "active", createdAt: "2025-05-02T09:30:00Z" },
+  { id: "usr_042", name: "Oscar Lindgren", email: "oscar.lindgren@malmosys.se", role: "viewer", status: "pending", createdAt: "2025-05-15T14:00:00Z" },
+  { id: "usr_043", name: "Rosa Fernandez", email: "rosa.fernandez@madridweb.es", role: "editor", status: "active", createdAt: "2025-05-28T08:45:00Z" },
+  { id: "usr_044", name: "Stefan Novak", email: "stefan.novak@warsawdev.pl", role: "viewer", status: "active", createdAt: "2025-06-09T12:50:00Z" },
+  { id: "usr_045", name: "Uma Krishnan", email: "uma.krishnan@bangaloreai.in", role: "admin", status: "active", createdAt: "2025-06-22T15:15:00Z" },
+  { id: "usr_046", name: "Victor Almeida", email: "victor.almeida@saopaulo.dev", role: "editor", status: "inactive", createdAt: "2025-07-03T10:40:00Z" },
+  { id: "usr_047", name: "Wendy Liu", email: "wendy.liu@shanghaitech.cn", role: "viewer", status: "active", createdAt: "2025-07-16T13:20:00Z" },
+  { id: "usr_048", name: "Xavier Dupont", email: "xavier.dupont@lyonlab.fr", role: "editor", status: "pending", createdAt: "2025-07-29T07:30:00Z" },
+  { id: "usr_049", name: "Yara El-Masri", email: "yara.elmasri@cairocode.eg", role: "admin", status: "active", createdAt: "2025-08-10T11:00:00Z" },
+  { id: "usr_050", name: "Zoe Papadakis", email: "zoe.papadakis@cretedev.gr", role: "viewer", status: "inactive", createdAt: "2025-08-23T14:30:00Z" },
+];

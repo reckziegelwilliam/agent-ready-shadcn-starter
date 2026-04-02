@@ -31,6 +31,13 @@ dist
 # Debug
 npm-debug.log*
 
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
 # Misc
 .DS_Store
 *.pem
+*.tsbuildinfo
