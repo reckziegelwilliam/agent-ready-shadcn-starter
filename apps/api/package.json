@@ -19,7 +19,9 @@
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",
+    "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
+    "eslint": "^9.39.2",
     "typescript": "~5.7.0"
   }
 }
