@@ -5,6 +5,8 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
+**[Live Demo](https://agent-ready-shadcn-starter.vercel.app)**
+
 ---
 
 ## Why this exists
@@ -30,7 +32,7 @@ This repo shows how to:
 ## Quick start
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/agent-ready-shadcn-starter.git
+git clone https://github.com/reckziegelwilliam/agent-ready-shadcn-starter.git
 cd agent-ready-shadcn-starter
 pnpm install
 pnpm dev
@@ -53,6 +55,25 @@ pnpm dev
 | File Upload | Planned | Drag and drop, preview, progress tracking |
 
 Each example includes a **spec**, a **prompt pack**, the **final implementation**, and **review notes** showing what the AI got wrong and how it was corrected.
+
+## Screenshots
+
+### Auth Flow
+
+| Login | Signup | Forgot Password |
+|-------|--------|-----------------|
+| ![Login](public/screenshots/auth-login.png) | ![Signup](public/screenshots/auth-signup.png) | ![Forgot Password](public/screenshots/auth-forgot-password.png) |
+
+### Dashboard Table
+
+| Loading State | Loaded |
+|---------------|--------|
+| ![Loading](public/screenshots/dashboard-loading.png) | ![Table](public/screenshots/dashboard-table.png) |
+
+### Feature Demos
+
+![Auth Flow Demo](public/demo-gifs/auth-flow.gif)
+![Dashboard Table Demo](public/demo-gifs/dashboard-table.gif)
 
 ## Repo structure
 
