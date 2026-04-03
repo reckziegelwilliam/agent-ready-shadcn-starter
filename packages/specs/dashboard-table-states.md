@@ -16,7 +16,7 @@
 | **Filtering** | User types in search input | Table filters in real-time (300ms debounce) | Debounced `globalFilter` state | Done |
 | **Row selection** | User checks row checkboxes | Selected count shown in toolbar, header checkbox for all | `rowSelection` state + checkbox column | Done |
 | **Pagination** | User changes page or page size | Table updates, "Page X of Y" display, "Showing X-Y of Z" | `PaginationState` with 10/20/50 options | Done |
-| **Error (server)** | API fetch fails | No distinct error UI | Mock data is hardcoded — no API call to fail | Not implemented |
+| **Error (server)** | API fetch fails | Error card with AlertCircle icon, error message, and retry button | `DataTableError` component with simulated 10% error chance, `onRetry` triggers data reload | Done |
 | **Error (network)** | Offline during data fetch | No handling | No API integration yet | Not implemented |
 | **Stale data** | Background refresh fails | No stale indicator | No polling or refetch mechanism | Not implemented |
 | **Bulk action** | Multiple rows selected, user triggers action | No bulk action UI beyond selection count | Selection state exists but no action buttons | Not implemented |
@@ -28,7 +28,7 @@
 
 | Gap | Priority | Notes |
 |-----|----------|-------|
-| Server error state | High | Need API integration with error handling |
+| Server error state | High | Implemented with `DataTableError` component and simulated error |
 | Network error / offline | Medium | Need fetch wrapper with error type detection |
 | Stale data indicator | Medium | Useful for dashboards with polling |
 | Bulk actions (delete, export) | Medium | Selection mechanism exists, needs action handlers |

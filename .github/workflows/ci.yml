@@ -72,7 +72,7 @@ jobs:
           cd apps/web && npx next start -p 3000 &
           sleep 5
           FAILED=0
-          for route in / /login /signup /forgot-password /dashboard /compare /quality; do
+          for route in / /login /signup /forgot-password /dashboard /settings /wizard /compare /quality; do
             STATUS=$(curl -so /dev/null -w "%{http_code}" http://localhost:3000$route)
             if [ "$STATUS" != "200" ]; then
               echo "FAIL: $route returned $STATUS"

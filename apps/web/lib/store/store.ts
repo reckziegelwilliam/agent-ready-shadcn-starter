@@ -1,10 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '@/features/auth/authSlice';
+import settingsReducer from '@/features/settings/settingsSlice';
+import wizardReducer from '@/features/wizard/wizardSlice';
 
 export function makeStore() {
   return configureStore({
     reducer: {
       auth: authReducer,
+      settings: settingsReducer,
+      wizard: wizardReducer,
     },
   });
 }

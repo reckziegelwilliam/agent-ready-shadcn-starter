@@ -8,6 +8,7 @@ import { z } from "zod";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
+import { WifiOff } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
 import { registerUser, clearError } from "@/features/auth/authSlice";
 
@@ -59,10 +60,29 @@ export function SignupForm() {
   }
 
   const isLoading = status === "loading";
+  const isNetworkError = error?.includes("Unable to connect");
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4" noValidate>
-      {error && (
+      {error && isNetworkError && (
+        <div
+          role="alert"
+          className="flex items-start gap-2.5 rounded-md bg-amber-500/10 px-3 py-2.5 text-sm text-amber-700 dark:text-amber-400"
+        >
+          <WifiOff className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+          <div className="flex flex-col gap-1">
+            <span>{error}</span>
+            <button
+              type="button"
+              onClick={() => handleSubmit(onSubmit)()}
+              className="w-fit text-xs font-medium underline underline-offset-2 hover:no-underline"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
+      {error && !isNetworkError && (
         <div
           role="alert"
           className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive"

@@ -54,8 +54,8 @@ pnpm dev
 |---------|--------|-------------|
 | Auth Flow | Done | Login, signup, forgot password with validation |
 | Dashboard Table | Done | Sortable, filterable, paginated data table |
-| Settings Page | Planned | Tabs, toggles, form save state |
-| Multi-step Wizard | Planned | Step validation, progress indicator, review step |
+| Settings Page | Done | Tabs, toggles, form save state |
+| Multi-step Wizard | Done | Step validation, progress indicator, review step |
 | Optimistic CRUD | Planned | Create/edit/delete with optimistic updates and rollback |
 | File Upload | Planned | Drag and drop, preview, progress tracking |
 

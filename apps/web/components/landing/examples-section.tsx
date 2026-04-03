@@ -24,15 +24,17 @@ const examples = [
   },
   {
     title: "Settings Page",
-    href: null,
-    description: "",
-    status: "Planned" as const,
+    href: "/settings",
+    description:
+      "Profile form with dirty state tracking, notification toggles with optimistic updates.",
+    status: "Done" as const,
   },
   {
     title: "Multi-step Wizard",
-    href: null,
-    description: "",
-    status: "Planned" as const,
+    href: "/wizard",
+    description:
+      "Step validation, progress indicator, review step with edit buttons.",
+    status: "Done" as const,
   },
   {
     title: "Optimistic CRUD",

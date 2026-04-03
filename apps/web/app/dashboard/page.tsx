@@ -1,18 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { mockUsers } from "@/lib/mock-data/users";
 import { columns } from "@/components/dashboard/columns";
 import { DataTable } from "@/components/dashboard/data-table";
+import { DataTableError } from "@/components/dashboard/data-table-error";
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2000);
+  const loadData = useCallback(() => {
+    setLoading(true);
+    setError(null);
+
+    const timer = setTimeout(() => {
+      // Simulate a 10% chance of server error to demonstrate error UI
+      if (Math.random() < 0.1) {
+        setError("Server returned 500: Internal Server Error. Please try again later.");
+        setLoading(false);
+        return;
+      }
+      setLoading(false);
+    }, 2000);
+
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const cleanup = loadData();
+    return cleanup;
+  }, [loadData]);
 
   return (
     <div className="mx-auto max-w-6xl space-y-6 p-6 md:p-10">
@@ -22,14 +41,18 @@ export default function DashboardPage() {
           Manage your team members and their account permissions.
         </p>
       </div>
-      <DataTable
-        columns={columns}
-        data={mockUsers}
-        loading={loading}
-        emptyMessage="No users found."
-        emptyActionLabel="Add first user"
-        onEmptyAction={() => {}}
-      />
+      {error ? (
+        <DataTableError message={error} onRetry={loadData} />
+      ) : (
+        <DataTable
+          columns={columns}
+          data={mockUsers}
+          loading={loading}
+          emptyMessage="No users found."
+          emptyActionLabel="Add first user"
+          onEmptyAction={() => {}}
+        />
+      )}
     </div>
   );
 }

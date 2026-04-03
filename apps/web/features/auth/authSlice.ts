@@ -25,11 +25,16 @@ const initialState: AuthState = {
 export const loginUser = createAsyncThunk(
   'auth/login',
   async (credentials: { email: string; password: string }) => {
-    const res = await fetch(`${API_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(credentials),
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${API_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials),
+      });
+    } catch {
+      throw new Error('Unable to connect. Please check your internet connection and try again.');
+    }
     if (!res.ok) {
       const data = await res.json();
       throw new Error(data.message || 'Login failed');
@@ -41,11 +46,16 @@ export const loginUser = createAsyncThunk(
 export const registerUser = createAsyncThunk(
   'auth/register',
   async (data: { email: string; password: string; name: string }) => {
-    const res = await fetch(`${API_URL}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${API_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch {
+      throw new Error('Unable to connect. Please check your internet connection and try again.');
+    }
     if (!res.ok) {
       const body = await res.json();
       throw new Error(body.message || 'Registration failed');
@@ -57,11 +67,16 @@ export const registerUser = createAsyncThunk(
 export const forgotPassword = createAsyncThunk(
   'auth/forgotPassword',
   async (data: { email: string }) => {
-    const res = await fetch(`${API_URL}/auth/forgot-password`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+    let res: Response;
+    try {
+      res = await fetch(`${API_URL}/auth/forgot-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+    } catch {
+      throw new Error('Unable to connect. Please check your internet connection and try again.');
+    }
     if (!res.ok) {
       const body = await res.json();
       throw new Error(body.message || 'Request failed');
