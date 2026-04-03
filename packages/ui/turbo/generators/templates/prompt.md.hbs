@@ -1,0 +1,90 @@
+# Build {{titleCase name}}
+
+> Target spec: `packages/specs/{{name}}.md`
+> State matrix: `packages/specs/{{name}}-states.md`
+> Difficulty: Medium
+
+## Context
+
+- **Stack:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, shadcn/ui
+- **State management:** Redux Toolkit with `@reduxjs/toolkit`
+- **Forms:** `react-hook-form` with `@hookform/resolvers` and `zod`
+- **Data tables:** `@tanstack/react-table`
+- **UI components:** `@workspace/ui` (shadcn/ui components in `packages/ui/src/components/`)
+- **Route:** `{{route}}`
+- **Conventions:** Follow existing patterns in `apps/web/` for file naming and folder structure.
+
+## Input
+
+1. Read the spec: `packages/specs/{{name}}.md`
+2. Read the state matrix: `packages/specs/{{name}}-states.md`
+3. Review existing patterns: `apps/web/features/` (if applicable)
+4. Check available UI components: `packages/ui/src/components/`
+
+## Instructions
+
+### 1. Define Types
+
+Create the TypeScript interfaces from the spec's Data Models section.
+
+- File: `apps/web/features/{{name}}/types.ts`
+- Export all interfaces that other files will import.
+
+### 2. Create the Zod Schemas
+
+Define validation schemas matching the spec's Validation Rules.
+
+- File: `apps/web/features/{{name}}/schemas.ts`
+- Import and use `z` from `zod`.
+- Export each schema and its inferred type.
+
+### 3. Build the Redux Slice
+
+Create the state slice with async thunks for each API endpoint.
+
+- File: `apps/web/features/{{name}}/slice.ts`
+- Follow the async thunk pattern: `pending` sets loading, `fulfilled` sets data, `rejected` sets error.
+- Export the reducer, actions, and selectors.
+
+### 4. Build the UI Components
+
+Create each component listed in the spec's Screens/Components section.
+
+- Directory: `apps/web/features/{{name}}/components/`
+- One file per component.
+- Use shadcn/ui primitives from `@workspace/ui/components/`.
+- Implement every state from the state matrix -- all 10 states must be handled.
+
+### 5. Create the Page
+
+Wire everything together in the Next.js page.
+
+- File: `apps/web/app/{{stripSlash route}}/page.tsx`
+- Import components, connect to Redux store.
+
+### 6. Register the Slice
+
+Add the slice reducer to the root store.
+
+- File: `apps/web/lib/store.ts`
+
+## Output
+
+| File | Action | Description |
+| ---- | ------ | ----------- |
+| `apps/web/features/{{name}}/types.ts` | Create | TypeScript interfaces |
+| `apps/web/features/{{name}}/schemas.ts` | Create | Zod validation schemas |
+| `apps/web/features/{{name}}/slice.ts` | Create | Redux Toolkit slice |
+| `apps/web/features/{{name}}/components/*.tsx` | Create | UI components |
+| `apps/web/app/{{stripSlash route}}/page.tsx` | Create | Next.js page |
+| `apps/web/lib/store.ts` | Modify | Register new slice |
+
+## Verification
+
+1. **Type check:** Run `pnpm typecheck` from the monorepo root. Zero errors.
+2. **Lint:** Run `pnpm lint`. Zero errors.
+3. **Visual:** Start the dev server (`pnpm dev`) and navigate to `{{route}}`. Verify all states render correctly.
+4. **Accessibility:** Tab through all interactive elements. Verify focus order is logical.
+5. **State coverage:** Compare implementation against every row in `packages/specs/{{name}}-states.md`. All 10 states should be handled.
+6. **Spec coverage:** Compare the output against every acceptance criterion in the spec. All should pass.
+7. **Review checklist:** Run the relevant checklist from `packages/review-checklists/`.

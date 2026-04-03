@@ -1,6 +1,6 @@
 # agent-ready-shadcn-starter
 
-> Production-grade starter and playbook for shipping shadcn/ui + Tailwind + Redux Toolkit + NestJS features from specs using AI coding agents.
+> Ship AI-generated UI without shipping AI-generated mistakes.
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
@@ -11,23 +11,28 @@
 
 ## Why this exists
 
-AI coding agents can generate UI quickly. They usually do not generate production-ready product code. Forms miss validation states. Tables lack empty and error handling. Accessibility is an afterthought. State management is bolted on instead of designed.
+AI can generate UI fast. But only 68.3% of AI-generated projects execute out of the box. Models are better at generation than verification. Consistency drifts across multi-file changes. Accessibility, error states, and edge cases are afterthoughts.
 
-This repo shows how to:
+This is not a starter kit. It is a **hardening framework** — a system for turning AI-generated code into production-safe features.
 
-- **Go from spec to implementation** with structured prompts
-- **Give agents the right context** so they produce better output on the first pass
-- **Review and harden AI-generated code** against a production checklist
-- **Ship polished features faster** by fixing patterns instead of symptoms
+## The five pillars
+
+1. **Scaffold** — Generate feature structure with specs, state matrices, and prompt templates (`pnpm turbo gen feature`)
+2. **Spec** — Define every state, validation rule, and acceptance criterion before generating code
+3. **Instruct** — Give agents structured prompts with project context, not vague one-shot requests
+4. **Evaluate** — Score output on accessibility, type safety, state coverage, and consistency ([`/quality`](https://agent-ready-shadcn-starter.vercel.app/quality))
+5. **Repair** — Compare AI output against production code, document every fix ([`/compare`](https://agent-ready-shadcn-starter.vercel.app/compare))
 
 ## What's inside
 
-- **Next.js 16** + shadcn/ui + Tailwind v4 frontend
-- **NestJS 11** backend API
-- **Redux Toolkit** patterns for real app state management
-- **Reusable prompt packs** for AI coding agents
-- **Production review checklists** for hardening AI output
-- **Copyable feature examples** with specs, prompts, and review notes
+- **Before/after repair viewer** — Side-by-side diffs showing what AI got wrong and how it was fixed
+- **Quality dashboard** — Real scores per example: accessibility, types, state coverage, tests
+- **State matrices** — Every feature specifies all 10 states (loading, empty, error, offline, etc.)
+- **Feature scaffold CLI** — `pnpm turbo gen feature` creates spec, state matrix, prompt, and review template
+- **Reproducibility CI** — Every push verifies fresh install, build, tests, and route rendering
+- **Production review checklists** — Checklist-driven review for accessibility, types, states, and consistency
+- **Reusable prompt packs** — Structured agent instructions, not just "generate a login form"
+- **Golden examples** — Auth flow and dashboard table with full spec → implement → review cycle
 
 ## Quick start
 

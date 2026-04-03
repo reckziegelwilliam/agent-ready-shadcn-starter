@@ -1,0 +1,111 @@
+# {{titleCase name}}
+
+> Spec version: 1.0
+> Last updated: {{now}}
+
+## Overview
+
+{{description}}
+
+## User Stories
+
+- **As a** user, **I want to** [action], **so that** [outcome].
+- **As a** user, **I want to** [action], **so that** [outcome].
+
+## Screens / Components
+
+### Screen: {{titleCase name}}
+
+**Route:** `{{route}}`
+
+**Description:** _What the user sees and can do on this screen._
+
+**Components:**
+- `ComponentName` -- Brief description of what it renders and its responsibilities.
+- `ComponentName` -- Brief description.
+
+## States
+
+Define every state each screen can be in. AI agents frequently miss edge-case states, so be thorough.
+
+> Full state matrix: `packages/specs/{{name}}-states.md`
+
+### {{titleCase name}}
+
+| State    | Condition                        | What the User Sees                          |
+| -------- | -------------------------------- | ------------------------------------------- |
+| Idle     | Initial load, no interaction yet | Clean default UI                            |
+| Loading  | Async operation in progress      | Spinner/skeleton, inputs disabled            |
+| Empty    | No data available                | Empty state illustration with CTA           |
+| Success  | Operation completed              | Success feedback (toast, redirect, message) |
+| Error    | Server returned an error         | Inline error banner with message            |
+
+## Data Models
+
+Define TypeScript interfaces for every entity involved.
+
+```typescript
+interface EntityName {
+  id: string;
+  // ... fields with types
+  createdAt: string; // ISO 8601
+  updatedAt: string; // ISO 8601
+}
+```
+
+## API Contracts
+
+### `METHOD /api/path`
+
+**Description:** _What this endpoint does._
+
+**Request:**
+```typescript
+interface RequestBody {
+  // fields
+}
+```
+
+**Response (200):**
+```typescript
+interface SuccessResponse {
+  // fields
+}
+```
+
+**Error Responses:**
+
+| Status | Code               | Message                    |
+| ------ | ------------------ | -------------------------- |
+| 400    | `VALIDATION_ERROR` | Field-level error messages |
+| 401    | `UNAUTHORIZED`     | Authentication required    |
+| 500    | `INTERNAL_ERROR`   | Something went wrong       |
+
+## Validation Rules
+
+| Field       | Rule                              | Error Message                        |
+| ----------- | --------------------------------- | ------------------------------------ |
+| `fieldName` | Required, valid format            | "Please enter a valid value"         |
+
+_List every field that has client-side or server-side validation._
+
+## Acceptance Criteria
+
+Each criterion should be independently testable.
+
+- [ ] **AC-1:** [Specific, verifiable condition]
+- [ ] **AC-2:** [Specific, verifiable condition]
+- [ ] **AC-3:** [Specific, verifiable condition]
+
+## Out of Scope
+
+_Explicitly list things this spec does NOT cover to prevent scope creep._
+
+- Item that might be assumed but is not included
+- Future enhancement that is deferred
+
+## Open Questions
+
+_Unresolved decisions that need input before implementation._
+
+- [ ] Question about design or behavior?

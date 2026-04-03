@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   ci:
-    name: Build, Lint, Typecheck
+    name: Build, Lint, Typecheck, Test
     runs-on: ubuntu-latest
 
     steps:
@@ -39,3 +39,47 @@ jobs:
 
       - name: Typecheck
         run: pnpm turbo typecheck
+
+      - name: Test
+        run: pnpm turbo test
+
+  reproducibility:
+    name: Reproducibility Check
+    runs-on: ubuntu-latest
+    needs: ci
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Fresh install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm turbo build
+
+      - name: Verify all routes render
+        run: |
+          cd apps/web && npx next start -p 3000 &
+          sleep 5
+          FAILED=0
+          for route in / /login /signup /forgot-password /dashboard /compare /quality; do
+            STATUS=$(curl -so /dev/null -w "%{http_code}" http://localhost:3000$route)
+            if [ "$STATUS" != "200" ]; then
+              echo "FAIL: $route returned $STATUS"
+              FAILED=1
+            else
+              echo "OK: $route ($STATUS)"
+            fi
+          done
+          if [ "$FAILED" = "1" ]; then exit 1; fi
+          echo "All routes verified."

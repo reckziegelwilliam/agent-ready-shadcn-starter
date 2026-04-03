@@ -1,0 +1,51 @@
+# {{titleCase name}}
+
+{{description}}
+
+## Route
+
+`{{route}}`
+
+## File Structure
+
+```
+examples/{{name}}/
+  README.md          # This file
+  review.md          # Post-build review and lessons learned
+
+apps/web/app/{{stripSlash route}}/
+  page.tsx           # Next.js page component
+
+apps/web/components/{{name}}/
+  index.ts           # Component barrel file
+
+apps/web/features/{{name}}/
+  types.ts           # TypeScript interfaces
+  schemas.ts         # Zod validation schemas
+  slice.ts           # Redux Toolkit slice
+  components/        # Feature-specific UI components
+
+packages/specs/
+  {{name}}.md        # Feature specification
+  {{name}}-states.md # State matrix
+
+packages/prompts/
+  build-{{name}}.md  # AI build prompt
+```
+
+## How to Run
+
+```bash
+# From the monorepo root
+pnpm dev
+
+# Navigate to
+# http://localhost:3000{{route}}
+```
+
+## Key Patterns
+
+_Document notable patterns, decisions, or techniques used in this feature._
+
+- Pattern 1
+- Pattern 2
