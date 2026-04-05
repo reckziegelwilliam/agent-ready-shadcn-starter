@@ -56,8 +56,8 @@ pnpm dev
 | Dashboard Table | Done | Sortable, filterable, paginated data table |
 | Settings Page | Done | Tabs, toggles, form save state |
 | Multi-step Wizard | Done | Step validation, progress indicator, review step |
-| Optimistic CRUD | Planned | Create/edit/delete with optimistic updates and rollback |
-| File Upload | Planned | Drag and drop, preview, progress tracking |
+| Optimistic CRUD | Done | Create/edit/delete with optimistic updates and rollback |
+| File Upload | Done | Drag and drop, preview, progress tracking |
 
 Each example includes a **spec**, a **prompt pack**, the **final implementation**, and **review notes** showing what the AI got wrong and how it was corrected.
 

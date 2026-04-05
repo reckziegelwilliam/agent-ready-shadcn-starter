@@ -38,15 +38,17 @@ const examples = [
   },
   {
     title: "Optimistic CRUD",
-    href: null,
-    description: "",
-    status: "Planned" as const,
+    href: "/items",
+    description:
+      "Create, edit, delete with optimistic updates, rollback on failure, and confirmation dialogs.",
+    status: "Done" as const,
   },
   {
     title: "File Upload",
-    href: null,
-    description: "",
-    status: "Planned" as const,
+    href: "/upload",
+    description:
+      "Drag and drop with preview thumbnails, progress tracking, per-file retry, and validation.",
+    status: "Done" as const,
   },
 ];
 
@@ -62,11 +64,7 @@ export function ExamplesSection() {
             const content = (
               <Card
                 key={ex.title}
-                className={
-                  ex.status === "Planned"
-                    ? "border-border bg-muted/40 opacity-60"
-                    : "border-border bg-card"
-                }
+                className="border-border bg-card"
               >
                 <CardHeader>
                   <div className="flex items-center justify-between">
