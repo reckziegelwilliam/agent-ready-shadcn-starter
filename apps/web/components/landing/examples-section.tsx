@@ -64,7 +64,7 @@ export function ExamplesSection() {
             const content = (
               <Card
                 key={ex.title}
-                className="border-border bg-card"
+                className="border-2 border-neutral-200 bg-neutral-50 transition-colors group-hover:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:group-hover:bg-neutral-800"
               >
                 <CardHeader>
                   <div className="flex items-center justify-between">

@@ -55,7 +55,7 @@ export function PillarsSection() {
                 >
                   {i + 1}
                 </Badge>
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-background">
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg border-2 border-neutral-200 bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900">
                   <p.icon className="h-6 w-6 text-foreground" />
                 </div>
                 <p className="text-sm font-semibold text-foreground">

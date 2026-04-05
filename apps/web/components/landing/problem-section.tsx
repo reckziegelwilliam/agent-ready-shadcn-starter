@@ -39,9 +39,9 @@ export function ProblemSection() {
         </h2>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {problems.map((p) => (
-            <Card key={p.title} className="border-border bg-card">
+            <Card key={p.title} className="border-2 border-neutral-200 bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900">
               <CardHeader>
-                <p.icon className="mb-2 h-8 w-8 text-muted-foreground" />
+                <p.icon className="mb-2 h-8 w-8 text-neutral-500 dark:text-neutral-400" />
                 <CardTitle className="text-lg leading-snug">
                   {p.title}
                 </CardTitle>

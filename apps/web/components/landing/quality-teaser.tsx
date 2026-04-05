@@ -58,7 +58,7 @@ export function QualityTeaser() {
         </h2>
         <div className="mx-auto mt-10 grid max-w-3xl gap-6 sm:grid-cols-2">
           {examples.map((ex) => (
-            <Card key={ex.name} className="border-border bg-card">
+            <Card key={ex.name} className="border-2 border-neutral-200 bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900">
               <CardHeader className="flex-row items-center justify-between pb-2">
                 <CardTitle className="text-base">{ex.name}</CardTitle>
                 <Badge variant="secondary" className="text-sm font-bold">
