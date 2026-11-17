@@ -69,7 +69,7 @@ Wire everything together in the Next.js page.
 
 Add the slice reducer to the root store.
 
-- File: `apps/web/lib/store.ts`
+- File: `apps/web/lib/store/store.ts`
 
 ## Output
 
@@ -82,7 +82,7 @@ _List every file the agent should create or modify._
 | `apps/web/features/[feature]/slice.ts` | Create | Redux Toolkit slice |
 | `apps/web/features/[feature]/components/ComponentName.tsx` | Create | UI component |
 | `apps/web/app/[route]/page.tsx` | Create | Next.js page |
-| `apps/web/lib/store.ts` | Modify | Register new slice |
+| `apps/web/lib/store/store.ts` | Modify | Register new slice |
 
 ## Verification
 

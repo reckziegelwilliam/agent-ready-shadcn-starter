@@ -17,7 +17,7 @@
 
 1. Read the full spec: `packages/specs/auth-flow.md`
 2. Review available shadcn components: `packages/ui/src/components/`
-3. Check if a Redux store exists: `apps/web/lib/store.ts`
+3. Check if a Redux store exists: `apps/web/lib/store/store.ts`
 4. Review any existing features in `apps/web/features/` for conventions
 
 ## Instructions
@@ -142,10 +142,10 @@ Create three pages using the Next.js App Router route group pattern.
 
 Add the auth reducer to the Redux store.
 
-- File: `apps/web/lib/store.ts` (create if it does not exist)
+- File: `apps/web/lib/store/store.ts` (create if it does not exist)
 - Import `authReducer` from `features/auth/slice` and add it under the `auth` key.
 - If the store file does not exist, create it with `configureStore`, a root `RootState` type, and an `AppDispatch` type.
-- Also create `apps/web/lib/hooks.ts` with typed `useAppDispatch` and `useAppSelector` hooks if they do not exist.
+- Also create `apps/web/lib/store/hooks.ts` with typed `useAppDispatch` and `useAppSelector` hooks if they do not exist.
 
 ## Output
 
@@ -163,8 +163,8 @@ Add the auth reducer to the Redux store.
 | `apps/web/app/(auth)/login/page.tsx` | Create | Login page |
 | `apps/web/app/(auth)/signup/page.tsx` | Create | Signup page |
 | `apps/web/app/(auth)/forgot-password/page.tsx` | Create | Forgot password page |
-| `apps/web/lib/store.ts` | Create/Modify | Redux store configuration |
-| `apps/web/lib/hooks.ts` | Create/Modify | Typed Redux hooks |
+| `apps/web/lib/store/store.ts` | Create/Modify | Redux store configuration |
+| `apps/web/lib/store/hooks.ts` | Create/Modify | Typed Redux hooks |
 
 ## Verification
 

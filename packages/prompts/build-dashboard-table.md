@@ -17,8 +17,8 @@
 
 1. Read the full spec: `packages/specs/dashboard-table.md`
 2. Review available shadcn components: `packages/ui/src/components/`
-3. Review the Redux store: `apps/web/lib/store.ts`
-4. Review typed hooks: `apps/web/lib/hooks.ts`
+3. Review the Redux store: `apps/web/lib/store/store.ts`
+4. Review typed hooks: `apps/web/lib/store/hooks.ts`
 
 ## Instructions
 
@@ -141,7 +141,7 @@ This is the orchestrator component.
 
 ### 8. Register the Slice
 
-- File: `apps/web/lib/store.ts`
+- File: `apps/web/lib/store/store.ts`
 - Import `usersReducer` from `features/dashboard/slice` and add it under the `users` key.
 
 ## Output
@@ -161,7 +161,7 @@ This is the orchestrator component.
 | `apps/web/features/dashboard/components/data-table-error.tsx` | Create | Error state with retry |
 | `apps/web/features/dashboard/components/users-table.tsx` | Create | Main table orchestrator |
 | `apps/web/app/dashboard/users/page.tsx` | Create | Next.js page |
-| `apps/web/lib/store.ts` | Modify | Register users slice |
+| `apps/web/lib/store/store.ts` | Modify | Register users slice |
 
 ## Verification
 

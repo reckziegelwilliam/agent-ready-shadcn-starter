@@ -61,5 +61,5 @@ Use this checklist when reviewing a Redux Toolkit slice file (`slice.ts`).
 ## Registration
 
 - [ ] The reducer is exported as the default export or a named `{feature}Reducer` export.
-- [ ] The reducer is registered in `apps/web/lib/store.ts` under an appropriately named key.
+- [ ] The reducer is registered in `apps/web/lib/store/store.ts` under an appropriately named key.
 - [ ] The `RootState` type automatically includes the new slice (inferred from `store.getState`).

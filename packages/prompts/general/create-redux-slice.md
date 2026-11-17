@@ -7,8 +7,8 @@
 This prompt guides the creation of a new Redux Toolkit slice following the project's established patterns. Slices are the primary state management unit in this codebase.
 
 - **Library:** `@reduxjs/toolkit` v2, `react-redux` v9
-- **Store:** `apps/web/lib/store.ts`
-- **Typed hooks:** `apps/web/lib/hooks.ts` (`useAppDispatch`, `useAppSelector`)
+- **Store:** `apps/web/lib/store/store.ts`
+- **Typed hooks:** `apps/web/lib/store/hooks.ts` (`useAppDispatch`, `useAppSelector`)
 - **Convention:** Each feature's slice lives at `apps/web/features/{feature}/slice.ts`
 
 ## Input
@@ -16,7 +16,7 @@ This prompt guides the creation of a new Redux Toolkit slice following the proje
 1. The feature name and what state it manages.
 2. The data shape -- what entities and UI state the slice tracks.
 3. API endpoints the slice needs to call (if any).
-4. Review the existing store: `apps/web/lib/store.ts`
+4. Review the existing store: `apps/web/lib/store/store.ts`
 5. Review any existing slices for pattern reference: `apps/web/features/*/slice.ts`
 
 ## Instructions
@@ -87,7 +87,7 @@ import type { FeatureState } from "./types";
 
 ### Step 3: Register in the Store
 
-- File: `apps/web/lib/store.ts`
+- File: `apps/web/lib/store/store.ts`
 - Import the reducer: `import { featureReducer } from "@/features/{feature}/slice"`.
 - Add it to `configureStore({ reducer: { ..., feature: featureReducer } })`.
 - Verify the `RootState` type automatically picks up the new slice (it should if `RootState` is inferred from `store.getState`).
@@ -105,7 +105,7 @@ import type { FeatureState } from "./types";
 | ---- | ------ | ----------- |
 | `apps/web/features/{feature}/types.ts` | Create | State and entity interfaces |
 | `apps/web/features/{feature}/slice.ts` | Create | Redux Toolkit slice |
-| `apps/web/lib/store.ts` | Modify | Register the new reducer |
+| `apps/web/lib/store/store.ts` | Modify | Register the new reducer |
 
 ## Verification
 

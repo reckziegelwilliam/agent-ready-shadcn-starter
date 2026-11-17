@@ -13,8 +13,8 @@ This is a generic prompt for turning any feature spec into a working implementat
 - **UI components:** `@workspace/ui/components/` (shadcn/ui primitives)
 - **Feature convention:** Each feature lives in `apps/web/features/{feature-name}/`
 - **Page convention:** Pages live in `apps/web/app/{route}/page.tsx`
-- **Store:** `apps/web/lib/store.ts` (add new reducers here)
-- **Typed hooks:** `apps/web/lib/hooks.ts` (`useAppDispatch`, `useAppSelector`)
+- **Store:** `apps/web/lib/store/store.ts` (add new reducers here)
+- **Typed hooks:** `apps/web/lib/store/hooks.ts` (`useAppDispatch`, `useAppSelector`)
 
 ## Input
 
@@ -44,7 +44,7 @@ From the spec's **API Contracts** and **States** sections:
    - Export synchronous actions for any UI-driven state changes (filters, selections, etc.).
    - Export memoized selectors for every piece of state a component will need.
 
-4. Register the slice in `apps/web/lib/store.ts`.
+4. Register the slice in `apps/web/lib/store/store.ts`.
 
 ### Step 3: Build the UI Layer
 
@@ -99,7 +99,7 @@ apps/web/app/{route}/
   page.tsx
   layout.tsx (if needed)
 
-apps/web/lib/store.ts (modified)
+apps/web/lib/store/store.ts (modified)
 ```
 
 ## Verification
