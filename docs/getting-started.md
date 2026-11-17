@@ -13,7 +13,7 @@ This guide walks you through setting up the agent-ready-shadcn-starter monorepo,
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/agent-ready-shadcn-starter.git
+git clone https://github.com/reckziegelwilliam/agent-ready-shadcn-starter.git
 cd agent-ready-shadcn-starter
 ```
 
@@ -53,6 +53,8 @@ Both servers support hot reload. Changes to shared packages (like `packages/ui`)
 | `pnpm build` | Build all packages and apps |
 | `pnpm lint` | Run ESLint across the monorepo |
 | `pnpm typecheck` | Run TypeScript type checking |
+| `pnpm test` | Run the Vitest suites in `apps/web` and `apps/api` |
+| `pnpm turbo gen feature` | Scaffold a new feature (spec, state matrix, prompt, example docs, page) |
 | `pnpm format` | Format code with Prettier |
 
 ## Adding shadcn/ui components
@@ -119,6 +121,10 @@ rm -rf .turbo node_modules/.cache
 pnpm install
 pnpm build
 ```
+
+## Using it with an AI agent
+
+Open the repo in Cursor, Claude Code, or Codex and describe what you want to build. [`AGENTS.md`](../AGENTS.md) (imported by `CLAUDE.md`) tells the agent to pick the closest example, write a spec, follow the prompt pack, and run the review checklists. `.mcp.json` and `.cursor/mcp.json` register the shadcn MCP server.
 
 ## Next steps
 

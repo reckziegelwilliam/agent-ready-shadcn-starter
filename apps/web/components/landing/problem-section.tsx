@@ -10,7 +10,7 @@ import {
 const problems = [
   {
     icon: AlertTriangle,
-    title: "Only 68.3% of AI-generated projects run out of the box.",
+    title: "AI-generated projects often don’t run out of the box.",
     description:
       "Hidden dependency gaps and setup drift break real environments.",
   },

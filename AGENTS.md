@@ -31,6 +31,8 @@ This repo is a **hardening framework** for AI-generated UI: every feature is bui
 
    Work through the instructions in order (data layer, then UI, then wiring) and run each prompt's Verification section.
 
+   Some older prompts (notably `build-auth-flow.md` and `build-dashboard-table.md`) list output paths like `apps/web/features/{feature}/components/` or `slice.ts`. The code in this repo settled on a different layout. When a prompt disagrees with the existing code, **follow the existing code layout** described under "Where the code lives" below.
+
 4. **Review against the checklists.** Checklists live in `packages/review-checklists/`:
    - `frontend-component.md` for any `.tsx` component
    - `redux-slice.md` for Redux Toolkit slices

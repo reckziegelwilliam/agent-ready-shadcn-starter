@@ -31,18 +31,27 @@ The primary frontend application.
 apps/web/
 ├── app/                  # App Router pages and layouts
 │   ├── (auth)/           # Auth route group (login, signup, forgot-password)
-│   ├── dashboard/        # Dashboard pages
+│   ├── dashboard/        # Data table example
+│   ├── settings/         # Settings example
+│   ├── wizard/           # Multi-step wizard example
+│   ├── items/            # Optimistic CRUD example
+│   ├── upload/           # File upload example
+│   ├── compare/          # Before/after repair viewer
+│   ├── quality/          # Quality dashboard
 │   ├── layout.tsx        # Root layout with providers
-│   └── page.tsx          # Home page
-├── components/           # Feature-specific components
-│   ├── auth/             # Auth forms and related UI
-│   └── dashboard/        # Dashboard-specific components
-├── features/             # Redux slices, organized by domain
-│   └── auth/             # authSlice.ts
+│   └── page.tsx          # Landing page
+├── components/           # Feature components, one folder per feature
+│   ├── auth/  dashboard/  settings/  wizard/  tasks/  upload/
+│   ├── compare/  quality/  landing/
+│   └── nav.tsx, theme-provider.tsx, ...
+├── features/             # Redux slices, one folder per domain
+│   └── auth/ settings/ wizard/ tasks/ uploads/   # {name}Slice.ts + __tests__/
 ├── hooks/                # Custom React hooks
 └── lib/                  # Utilities
-    ├── store/            # Redux store configuration
-    └── mock-data/        # Development mock data
+    ├── store/            # Redux store (store.ts), typed hooks (hooks.ts), provider
+    ├── mock-data/        # Mock data for the dashboard table
+    ├── comparisons/      # Data for the /compare viewer
+    └── quality-data.ts   # Data for the /quality dashboard
 ```
 
 #### `apps/api` -- NestJS 11 Backend
@@ -58,7 +67,11 @@ The backend API service.
 ```
 apps/api/
 └── src/
-    ├── auth/             # Auth module (controller, service, DTOs)
+    ├── auth/             # Auth module (controller, service)
+    ├── tasks/            # Optimistic CRUD example
+    ├── settings/         # Settings example
+    ├── onboarding/       # Wizard submit endpoint
+    ├── uploads/          # File upload example
     ├── health/           # Health check endpoint
     ├── app.module.ts     # Root module that imports all feature modules
     └── main.ts           # Application entry point
@@ -107,17 +120,11 @@ Each directory in `examples/` documents a complete feature lifecycle:
 
 ```
 examples/auth-flow/
-├── README.md            # Overview of this example
-├── spec.md              # Feature specification
-├── prompts/             # Numbered prompt pack
-│   ├── 01-setup.md
-│   ├── 02-components.md
-│   └── 03-state.md
-├── review-notes.md      # What AI got wrong and corrections
-└── screenshots/         # Visual documentation
+├── README.md            # Overview, key patterns, and a listing of the real files
+└── review.md            # What AI got wrong and how it was corrected
 ```
 
-The actual implementation code lives in `apps/` -- examples only contain documentation.
+The spec and state matrix for each example live in `packages/specs/` (`{feature}.md`, `{feature}-states.md`), the prompt pack in `packages/prompts/build-{feature}.md`, and the implementation code in `apps/`. Examples only contain documentation. `pnpm turbo gen feature` scaffolds all of these for a new feature.
 
 ## Data flow
 
@@ -143,7 +150,7 @@ The app uses Redux Toolkit with a feature-based slice architecture:
 The NestJS backend exposes RESTful endpoints. The frontend communicates via:
 
 - RTK async thunks for data fetching
-- Standard `fetch` or future RTK Query integration
+- Standard `fetch` against `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:4000`)
 
 ## Build pipeline
 
@@ -153,6 +160,7 @@ Turborepo manages the build graph defined in `turbo.json`:
 build   -- Depends on upstream builds (^build)
 lint    -- Depends on upstream lints (^lint)
 typecheck -- Depends on upstream typechecks (^typecheck)
+test    -- Runs Vitest in apps/web and apps/api
 dev     -- No caching, persistent (long-running)
 ```
 

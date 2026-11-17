@@ -21,7 +21,9 @@ cd agent-ready-shadcn-starter
 claude
 ```
 
-Claude Code will automatically pick up the project context from the directory structure.
+Claude Code loads `CLAUDE.md` automatically, which imports [`AGENTS.md`](../AGENTS.md). That file tells Claude the workflow (pick an example, write the spec, follow the prompt pack, run the review checklists), where everything lives, and which commands to run. You can simply describe what you want to build.
+
+The repo also ships `.mcp.json`, which registers the shadcn MCP server (`npx shadcn@latest mcp`). Claude Code will ask you to approve it the first time; once approved, Claude can search shadcn registries and get the right `add` commands.
 
 ## Step 1: Start with a spec
 
@@ -74,14 +76,13 @@ AI coding agents produce better output when they understand the codebase. Before
 
 ## Step 3: Run the prompt pack
 
-Prompt packs in `packages/prompts/` and `examples/*/prompts/` are designed to be executed in order. Each prompt builds on the previous one.
+Prompt packs live in `packages/prompts/`. Each feature has one `build-{feature}.md` prompt whose instructions are ordered steps, and `packages/prompts/general/` holds reusable passes (spec to page, add states, accessibility pass, testing pass, review).
 
-### Example: Running the auth flow prompts
+### Example: Running the auth flow prompt
 
 ```
-Prompt 01 (setup):     Create the file structure and validation schemas
-Prompt 02 (components): Build the form components with shadcn/ui
-Prompt 03 (state):     Wire up Redux Toolkit state management
+Follow packages/prompts/build-auth-flow.md against packages/specs/auth-flow.md.
+Do one instruction section at a time and run its verification before moving on.
 ```
 
 ### Best practices for running prompts
@@ -136,7 +137,7 @@ When you find an issue:
 
 1. Fix it in the code
 2. Update the prompt to prevent the issue next time
-3. Document it in the example's `review-notes.md`
+3. Document it in the example's `review.md`
 
 ### Writing review notes
 

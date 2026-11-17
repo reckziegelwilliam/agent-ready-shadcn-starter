@@ -4,46 +4,41 @@ This example demonstrates how an AI agent builds a complex, interactive data tab
 
 ## What This Covers
 
-- Server-side paginated data table with `@tanstack/react-table`
-- Column sorting with API-driven sort (not client-side)
-- Debounced global search and dropdown filters
-- Row selection with bulk delete via confirmation dialog
-- Loading skeleton, empty state, and error state with retry
+- Data table with `@tanstack/react-table` (client-side sorting, filtering and pagination over mock data)
+- Debounced global search (300ms)
+- Row selection with select-all checkbox
+- Loading skeleton, empty state, and error state with retry (the page simulates a 2s load and a 10% chance of a server error)
+
+> The spec in `packages/specs/dashboard-table.md` describes a server-driven table backed by an API and Redux slice. The current implementation is a simpler client-side version backed by `apps/web/lib/mock-data/users.ts`; it does not call the NestJS API. Treat the spec as the target if you extend it.
 
 ## Tech Stack Used
 
 - **Table:** `@tanstack/react-table` v8 (headless) with shadcn/ui `Table` for rendering
-- **State:** Redux Toolkit slice managing table state (page, sort, filters, selection)
-- **UI:** shadcn/ui `Table`, `Button`, `Input`, `Select`, `DropdownMenu`, `Checkbox`, `Badge`, `Skeleton`, `AlertDialog`
-- **Icons:** `lucide-react` for sort arrows, search icon, action menus
+- **State:** Local React state inside `DataTable` (sorting, filters, global filter, selection)
+- **UI:** shadcn/ui `Table`, `Button`, `Input`, `Select`, `Checkbox`, `Badge`, `Skeleton`
+- **Icons:** `lucide-react`
 
-## Files Produced
+## Files
 
 ```
-apps/web/features/dashboard/
-  types.ts              -- User, UsersTableState, UsersResponse interfaces
-  slice.ts              -- Users slice with fetchUsers and deleteUsers thunks
-  columns.tsx           -- TanStack Table column definitions
-  components/
-    users-table.tsx               -- Main orchestrator component
-    data-table-column-header.tsx  -- Sortable column header with icon
-    data-table-pagination.tsx     -- Page navigation and size selector
-    data-table-toolbar.tsx        -- Search input and filter dropdowns
-    data-table-row-actions.tsx    -- Per-row action dropdown menu
-    status-badge.tsx              -- Colored badge for user status
-    data-table-skeleton.tsx       -- Loading skeleton matching table layout
-    data-table-empty.tsx          -- Empty state with clear-filters CTA
-    data-table-error.tsx          -- Error state with retry button
-
-apps/web/app/dashboard/users/
-  page.tsx              -- Next.js page rendering UsersTable
+apps/web/app/dashboard/page.tsx                    -- Page: simulated load, error + retry, renders DataTable
+apps/web/components/dashboard/
+  data-table.tsx              -- Generic TanStack table with sorting, filtering, pagination, selection
+  columns.tsx                 -- Column definitions (select, name, email, role badge, status badge, ...)
+  data-table-toolbar.tsx      -- Debounced search input and selection count
+  data-table-pagination.tsx   -- Page navigation and page size selector
+  data-table-loading.tsx      -- Skeleton matching the table layout
+  data-table-empty.tsx        -- Empty state with optional action
+  data-table-error.tsx        -- Error state with retry button
+  __tests__/data-table.test.tsx
+apps/web/lib/mock-data/users.ts                    -- Mock users
 ```
 
 ## How to Reproduce
 
 1. Read the spec: [`packages/specs/dashboard-table.md`](../../packages/specs/dashboard-table.md)
 2. Feed the prompt to your AI agent: [`packages/prompts/build-dashboard-table.md`](../../packages/prompts/build-dashboard-table.md)
-3. The agent produces the files listed above.
+3. Compare the result with the files listed above.
 4. Run the review: [`packages/review-checklists/full-feature.md`](../../packages/review-checklists/full-feature.md)
 
 ## How to Run
@@ -53,16 +48,14 @@ apps/web/app/dashboard/users/
 pnpm dev
 
 # Navigate to:
-# http://localhost:3000/dashboard/users
+# http://localhost:3000/dashboard
 ```
 
 ## Key Patterns Demonstrated
 
-- **Server-side table state:** All sorting, filtering, and pagination triggers an API call. The client never holds the full dataset. This scales to millions of rows.
-- **Debounced search:** The search input maintains local state and dispatches to Redux after a 300ms delay, preventing excessive API calls during typing.
-- **Component reusability:** `DataTableColumnHeader`, `DataTablePagination`, and `DataTableToolbar` are designed to be reused by other tables in the app.
-- **State-driven rendering:** The `UsersTable` component branches on `status` to render skeleton, error, empty, or populated states. No state is missed.
-- **Bulk operations with confirmation:** Row selection feeds into a bulk delete action that requires an `AlertDialog` confirmation before executing.
+- **Debounced search:** The search input keeps local state and calls `table.setGlobalFilter` after a 300ms delay.
+- **Component reusability:** `DataTable` is generic over row type and columns; `DataTablePagination`, `DataTableToolbar`, `DataTableLoading`, `DataTableEmpty` and `DataTableError` can be reused by other tables.
+- **State-driven rendering:** The page and table branch on loading, error, empty and populated states, so no state is missed.
 
 ## Review Notes
 

@@ -8,7 +8,7 @@
 - **Stack:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, shadcn/ui
 - **State management:** Redux Toolkit (`@reduxjs/toolkit`, `react-redux`)
 - **Test framework:** Vitest as the test runner, `@testing-library/react` for component tests, `@testing-library/user-event` for user interactions
-- **Test location:** `apps/web/__tests__/` for all web app tests, mirroring the source directory structure
+- **Test location:** `__tests__/` folders next to the code they test (e.g. `apps/web/features/{feature}/__tests__/`, `apps/web/components/{feature}/__tests__/`). Vitest setup is in `apps/web/test/setup.ts`.
 - **Store setup:** Tests that involve Redux state should use a test utility that wraps components with a fresh `<Provider store={...}>`. See `apps/web/__tests__/test-utils.tsx` if it exists.
 - **Mocking:** Use `vi.fn()` for function mocks, `vi.mock()` for module mocks. Mock `fetch` globally for slice tests.
 - **Goal:** Generate comprehensive test suites that cover Redux slices (reducers, async thunks) and UI components (rendering, user interaction, state handling). AI-generated code often ships without tests. This prompt creates them.
@@ -17,7 +17,7 @@
 
 1. Read the components to test, as specified by the user.
 2. Read the Redux slices to test: `apps/web/features/<feature>/<feature>Slice.ts`.
-3. Read any existing tests for patterns: `apps/web/__tests__/`.
+3. Read existing tests for patterns, e.g. `apps/web/features/tasks/__tests__/tasksSlice.test.ts` and `apps/web/components/auth/__tests__/login-form.test.tsx`.
 4. Read the test configuration: `apps/web/vitest.config.ts` or `vitest.config.ts` in the monorepo root.
 5. Read test utilities if they exist: `apps/web/__tests__/test-utils.tsx`.
 

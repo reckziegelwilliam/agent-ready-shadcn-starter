@@ -30,8 +30,18 @@ Every spec follows a consistent structure (see `_template.md`):
 
 ## Existing Specs
 
-- [`auth-flow.md`](./auth-flow.md) -- Login, signup, and forgot-password flows
-- [`dashboard-table.md`](./dashboard-table.md) -- Paginated, sortable, filterable data table
+Each feature has a spec and a state matrix (`{feature}-states.md`):
+
+| Feature | Spec | State matrix |
+| ------- | ---- | ------------ |
+| Auth flow | [`auth-flow.md`](./auth-flow.md) | [`auth-flow-states.md`](./auth-flow-states.md) |
+| Dashboard table | [`dashboard-table.md`](./dashboard-table.md) | [`dashboard-table-states.md`](./dashboard-table-states.md) |
+| Settings page | [`settings-page.md`](./settings-page.md) | [`settings-page-states.md`](./settings-page-states.md) |
+| Multi-step wizard | [`multi-step-wizard.md`](./multi-step-wizard.md) | [`multi-step-wizard-states.md`](./multi-step-wizard-states.md) |
+| Optimistic CRUD | [`optimistic-crud.md`](./optimistic-crud.md) | [`optimistic-crud-states.md`](./optimistic-crud-states.md) |
+| File upload | [`file-upload.md`](./file-upload.md) | [`file-upload-states.md`](./file-upload-states.md) |
+
+Templates: [`_template.md`](./_template.md) for specs and [`_state-matrix-template.md`](./_state-matrix-template.md) for state matrices. `pnpm turbo gen feature` creates both for a new feature.
 
 ## Usage with Prompt Packs
 
