@@ -5,14 +5,13 @@
 
 ## Context
 
-- **Stack:** NestJS 10, TypeScript, class-validator, class-transformer
+- **Stack:** NestJS 11, TypeScript
 - **API app location:** `apps/api/` within the monorepo
-- **Module pattern:** Each feature gets its own NestJS module with controller, service, and DTOs
-- **Existing reference:** `apps/api/src/auth/` module demonstrates the established patterns for controllers, services, DTOs, and error handling
-- **Validation:** DTOs use `class-validator` decorators. The `ValidationPipe` is registered globally in `main.ts`.
+- **Module pattern:** Each feature gets its own NestJS module with controller and service
+- **Existing reference:** `apps/api/src/auth/` (and `tasks/`, `settings/`, `uploads/`, `onboarding/`) demonstrate the established patterns for controllers, services, and error handling
+- **Data:** The existing modules keep data in memory inside the service (no database). Follow that unless the spec says otherwise.
 - **Error responses:** Use NestJS built-in exceptions (`BadRequestException`, `NotFoundException`, `ConflictException`, `UnauthorizedException`) for predictable HTTP status codes
-- **Database:** TypeORM entities in `apps/api/src/entities/` (or create if not present)
-- **Config:** Environment variables accessed via `@nestjs/config` `ConfigService`
+- **Not installed yet:** `class-validator`, `class-transformer`, a global `ValidationPipe`, TypeORM and `@nestjs/config` are not part of the API today. The existing controllers type request bodies inline. If the feature needs DTO validation, a database or config, add the dependency (`pnpm --filter @workspace/api add <pkg>`) and wire it up explicitly as part of the change; the steps below that mention DTO decorators assume you have done so.
 
 ## Input
 
