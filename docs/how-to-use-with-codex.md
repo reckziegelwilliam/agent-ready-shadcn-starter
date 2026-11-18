@@ -36,7 +36,15 @@ cd agent-ready-shadcn-starter
 codex
 ```
 
-Provide the project context the same way you would with any terminal agent -- point to files and directories.
+Codex reads [`AGENTS.md`](../AGENTS.md) at the repo root automatically. It describes the workflow, file locations, commands, and conventions, so you can describe what you want and Codex will follow the repo's process.
+
+To give Codex the shadcn MCP server, add it to `~/.codex/config.toml` (this is what `npx shadcn@latest mcp init --client codex` prints):
+
+```toml
+[mcp_servers.shadcn]
+command = "npx"
+args = ["shadcn@latest", "mcp"]
+```
 
 ### Option B: ChatGPT (browser-based)
 
@@ -181,7 +189,7 @@ When the output has issues:
 
 ### Documenting corrections
 
-Record what went wrong in the example's `review-notes.md`:
+Record what went wrong in the example's `review.md`:
 
 ```markdown
 ## Import paths

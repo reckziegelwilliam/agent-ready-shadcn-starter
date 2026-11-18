@@ -1,10 +1,10 @@
 # Redux Slice Review Checklist
 
-Use this checklist when reviewing a Redux Toolkit slice file (`slice.ts`).
+Use this checklist when reviewing a Redux Toolkit slice file (`apps/web/features/{feature}/{feature}Slice.ts`).
 
 ## State Shape
 
-- [ ] The state interface is explicitly defined in a `types.ts` file and imported.
+- [ ] The state interface is explicitly defined and exported from the slice file.
 - [ ] The state includes a `status` field with values `"idle" | "loading" | "succeeded" | "failed"`.
 - [ ] The state includes an `error` field of type `string | null`.
 - [ ] Initial state values are sensible defaults (empty arrays for lists, `null` for optional objects, `"idle"` for status).
@@ -61,5 +61,5 @@ Use this checklist when reviewing a Redux Toolkit slice file (`slice.ts`).
 ## Registration
 
 - [ ] The reducer is exported as the default export or a named `{feature}Reducer` export.
-- [ ] The reducer is registered in `apps/web/lib/store.ts` under an appropriately named key.
+- [ ] The reducer is registered in `apps/web/lib/store/store.ts` under an appropriately named key.
 - [ ] The `RootState` type automatically includes the new slice (inferred from `store.getState`).

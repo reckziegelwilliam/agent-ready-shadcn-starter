@@ -13,8 +13,8 @@ This is a generic prompt for turning any feature spec into a working implementat
 - **UI components:** `@workspace/ui/components/` (shadcn/ui primitives)
 - **Feature convention:** Each feature lives in `apps/web/features/{feature-name}/`
 - **Page convention:** Pages live in `apps/web/app/{route}/page.tsx`
-- **Store:** `apps/web/lib/store.ts` (add new reducers here)
-- **Typed hooks:** `apps/web/lib/hooks.ts` (`useAppDispatch`, `useAppSelector`)
+- **Store:** `apps/web/lib/store/store.ts` (add new reducers here)
+- **Typed hooks:** `apps/web/lib/store/hooks.ts` (`useAppDispatch`, `useAppSelector`)
 
 ## Input
 
@@ -30,31 +30,32 @@ Follow these steps in order. Do not skip ahead -- later steps depend on earlier 
 
 From the spec's **Data Models** and **API Contracts** sections:
 
-1. Create `apps/web/features/{feature}/types.ts` -- Export every TypeScript interface: entities, request/response bodies, and the feature's slice state shape.
-2. Create `apps/web/features/{feature}/schemas.ts` -- Translate every rule from the spec's **Validation Rules** table into a `zod` schema. Export each schema and its inferred type (`z.infer<typeof schema>`).
+1. If the feature needs data, build the API first: a NestJS module in `apps/api/src/{feature}/` (see `prompts/general/spec-to-api.md`), plus the demo-mode mirror in `apps/web/lib/demo-api/store.ts` and route handlers under `apps/web/app/api/{feature}/`.
+2. Decide the TypeScript interfaces (entities, request/response bodies, slice state). They are exported from the slice file in Step 2; this repo has no separate `types.ts`. Zod schemas for validation rules live in the form components in Step 3.
 
 ### Step 2: Build the State Layer
 
 From the spec's **API Contracts** and **States** sections:
 
-3. Create `apps/web/features/{feature}/slice.ts` -- Build a Redux Toolkit slice:
-   - Define initial state matching the state interface from Step 1.
+3. Create `apps/web/features/{feature}/{feature}Slice.ts` -- Build a Redux Toolkit slice:
+   - Export the interfaces from Step 1 and define initial state matching the state interface.
+   - Call the API as `${API_URL}/...` with `API_URL` from `@/lib/api`.
    - Create an async thunk for each API endpoint in the spec. Use `createAsyncThunk` with proper error extraction.
    - Handle `pending`, `fulfilled`, and `rejected` in `extraReducers`.
    - Export synchronous actions for any UI-driven state changes (filters, selections, etc.).
    - Export memoized selectors for every piece of state a component will need.
 
-4. Register the slice in `apps/web/lib/store.ts`.
+4. Register the slice in `apps/web/lib/store/store.ts`.
 
 ### Step 3: Build the UI Layer
 
 From the spec's **Screens/Components** and **States** sections:
 
-5. Create each component listed in the spec under `apps/web/features/{feature}/components/`:
+5. Create each component listed in the spec under `apps/web/components/{feature}/`:
    - One file per component, using kebab-case file names.
    - Use shadcn/ui primitives from `@workspace/ui/components/`.
    - Implement every state variant listed in the spec's **States** table. This is critical -- AI agents commonly skip error and empty states.
-   - Wire forms with `react-hook-form` and the `zod` schemas from Step 2.
+   - Wire forms with `react-hook-form` and a `zod` schema defined at the top of the form component, translating every rule from the spec's **Validation Rules** table.
    - Connect to Redux using `useAppSelector` and `useAppDispatch`.
 
 6. For each component, verify:
@@ -88,18 +89,21 @@ The exact files depend on the spec, but the structure should be:
 
 ```
 apps/web/features/{feature}/
-  types.ts
-  schemas.ts
-  slice.ts
-  components/
-    {component-name}.tsx
-    ...
+  {feature}Slice.ts          # types + slice
+  __tests__/{feature}Slice.test.ts
+
+apps/web/components/{feature}/
+  {component-name}.tsx       # forms include their zod schema
+  __tests__/
+
+apps/api/src/{feature}/      # if the feature needs an API
+apps/web/lib/demo-api/store.ts + apps/web/app/api/{feature}/   # demo-mode mirror
 
 apps/web/app/{route}/
   page.tsx
   layout.tsx (if needed)
 
-apps/web/lib/store.ts (modified)
+apps/web/lib/store/store.ts (modified)
 ```
 
 ## Verification

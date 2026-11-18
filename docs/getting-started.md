@@ -13,7 +13,7 @@ This guide walks you through setting up the agent-ready-shadcn-starter monorepo,
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/agent-ready-shadcn-starter.git
+git clone https://github.com/reckziegelwilliam/agent-ready-shadcn-starter.git
 cd agent-ready-shadcn-starter
 ```
 
@@ -53,6 +53,8 @@ Both servers support hot reload. Changes to shared packages (like `packages/ui`)
 | `pnpm build` | Build all packages and apps |
 | `pnpm lint` | Run ESLint across the monorepo |
 | `pnpm typecheck` | Run TypeScript type checking |
+| `pnpm test` | Run the Vitest suites in `apps/web` and `apps/api` |
+| `pnpm turbo gen feature` | Scaffold a new feature (spec, state matrix, prompt, example docs, page) |
 | `pnpm format` | Format code with Prettier |
 
 ## Adding shadcn/ui components
@@ -81,14 +83,18 @@ See [architecture.md](architecture.md) for a deeper dive into how the pieces fit
 
 ## Environment variables
 
-Copy the example env file if one exists, or create `.env.local` in the app directory:
+The web app reads one variable, `NEXT_PUBLIC_API_URL`:
 
-```bash
-# apps/web/.env.local
-NEXT_PUBLIC_API_URL=http://localhost:4000
-```
+| Value | What the web app calls |
+|-------|------------------------|
+| An absolute URL, e.g. `http://localhost:4000` | That API (normally the NestJS app in `apps/api`) |
+| Unset, or a same-origin path like `/api` | **Demo mode**: built-in route handlers in `apps/web/app/api/` with in-memory mock data that mirror the NestJS API |
 
-Environment files (`.env*`) are gitignored. Never commit secrets.
+`apps/web/.env.development` (committed, used only by `next dev`) sets `http://localhost:4000`, so `pnpm dev` runs full stack. A production `next build` without the variable (Vercel, the deploy button) runs in demo mode. Sign in there with `demo@example.com` / `password123`.
+
+To try demo mode locally, run `pnpm --filter web build && pnpm --filter web start`, or comment out the line in `.env.development`. To point a deployment at a hosted API, set the variable in the host's environment settings (or in `apps/web/.env.local` locally); it is inlined at build time, so redeploy after changing it.
+
+`.env`, `.env.local` and `.env.*.local` are gitignored; `apps/web/.env.development` is committed because it holds no secrets. Never commit secrets.
 
 ## Troubleshooting
 
@@ -119,6 +125,10 @@ rm -rf .turbo node_modules/.cache
 pnpm install
 pnpm build
 ```
+
+## Using it with an AI agent
+
+Open the repo in Cursor, Claude Code, or Codex and describe what you want to build. [`AGENTS.md`](../AGENTS.md) (imported by `CLAUDE.md`) tells the agent to pick the closest example, write a spec, follow the prompt pack, and run the review checklists. `.mcp.json` and `.cursor/mcp.json` register the shadcn MCP server.
 
 ## Next steps
 

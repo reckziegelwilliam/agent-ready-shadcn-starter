@@ -14,8 +14,8 @@
 ## Input
 
 1. Read the components to audit, as specified by the user.
-2. Read the accessibility guidelines document if it exists: `packages/docs/accessibility-rules.md`.
-3. Review any existing tests for accessibility patterns: `apps/web/__tests__/`.
+2. Read the accessibility guidelines document if it exists: `docs/accessibility-rules.md`.
+3. Review existing tests for accessibility patterns, e.g. `apps/web/components/auth/__tests__/login-form.test.tsx`.
 4. List all interactive elements in each component (buttons, links, inputs, selects, checkboxes, custom controls).
 
 ## Instructions

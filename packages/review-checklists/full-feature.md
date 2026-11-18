@@ -90,9 +90,10 @@ This is the most common area where AI-generated code falls short. Verify each ex
 
 ## Code Organization
 
-- [ ] All feature code lives in `apps/web/features/{feature}/` (not scattered across the app).
-- [ ] Types are in `types.ts`, schemas in `schemas.ts`, state in `slice.ts`.
-- [ ] Components are in a `components/` subdirectory with one file per component.
+- [ ] Feature code follows the repo layout: slice and its types in `apps/web/features/{feature}/{feature}Slice.ts`, components in `apps/web/components/{feature}/`, page in `apps/web/app/{route}/`, API in `apps/api/src/{feature}/` (not scattered across the app).
+- [ ] Zod schemas live in the form component that uses them; tests live in `__tests__/` next to the code.
+- [ ] If the feature added or changed API endpoints, the demo-mode mirror (`apps/web/lib/demo-api/store.ts` + `apps/web/app/api/`) matches.
+- [ ] One file per component.
 - [ ] File names use kebab-case. Component names use PascalCase.
 - [ ] No circular imports between files.
 - [ ] Shared utilities are extracted to `apps/web/lib/` or the appropriate package, not duplicated.

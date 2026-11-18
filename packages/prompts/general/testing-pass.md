@@ -8,8 +8,8 @@
 - **Stack:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4, shadcn/ui
 - **State management:** Redux Toolkit (`@reduxjs/toolkit`, `react-redux`)
 - **Test framework:** Vitest as the test runner, `@testing-library/react` for component tests, `@testing-library/user-event` for user interactions
-- **Test location:** `apps/web/__tests__/` for all web app tests, mirroring the source directory structure
-- **Store setup:** Tests that involve Redux state should use a test utility that wraps components with a fresh `<Provider store={...}>`. See `apps/web/__tests__/test-utils.tsx` if it exists.
+- **Test location:** `__tests__/` folders next to the code they test (e.g. `apps/web/features/{feature}/__tests__/`, `apps/web/components/{feature}/__tests__/`). Vitest setup is in `apps/web/test/setup.ts`.
+- **Store setup:** Tests that involve Redux state should use a test utility that wraps components with a fresh `<Provider store={...}>`. See `apps/web/test/test-utils.tsx` if it exists; otherwise render inside `<Provider store={makeStore()}>` (`makeStore` from `apps/web/lib/store/store.ts`).
 - **Mocking:** Use `vi.fn()` for function mocks, `vi.mock()` for module mocks. Mock `fetch` globally for slice tests.
 - **Goal:** Generate comprehensive test suites that cover Redux slices (reducers, async thunks) and UI components (rendering, user interaction, state handling). AI-generated code often ships without tests. This prompt creates them.
 
@@ -17,9 +17,9 @@
 
 1. Read the components to test, as specified by the user.
 2. Read the Redux slices to test: `apps/web/features/<feature>/<feature>Slice.ts`.
-3. Read any existing tests for patterns: `apps/web/__tests__/`.
+3. Read existing tests for patterns, e.g. `apps/web/features/tasks/__tests__/tasksSlice.test.ts` and `apps/web/components/auth/__tests__/login-form.test.tsx`.
 4. Read the test configuration: `apps/web/vitest.config.ts` or `vitest.config.ts` in the monorepo root.
-5. Read test utilities if they exist: `apps/web/__tests__/test-utils.tsx`.
+5. Read test utilities if they exist: `apps/web/test/test-utils.tsx` (the Vitest setup file is `apps/web/test/setup.ts`).
 
 ## Instructions
 
@@ -27,7 +27,7 @@
 
 For each Redux slice (`<feature>Slice.ts`):
 
-**File:** `apps/web/__tests__/features/<feature>/<feature>Slice.test.ts`
+**File:** `apps/web/features/<feature>/__tests__/<feature>Slice.test.ts`
 
 - **Test initial state:** Verify the reducer returns the expected initial state when called with `undefined` state and an unknown action.
 - **Test each reducer action:** For each synchronous action (e.g., `clearError`, `logout`), dispatch it and verify the resulting state.
@@ -40,7 +40,7 @@ For each Redux slice (`<feature>Slice.ts`):
 
 For each component:
 
-**File:** `apps/web/__tests__/components/<feature>/<ComponentName>.test.tsx`
+**File:** `apps/web/components/<feature>/__tests__/<component-name>.test.tsx`
 
 - **Test default render:** Render the component in its idle state. Verify key elements are present using `screen.getByRole`, `screen.getByText`, or `screen.getByLabelText`.
 - **Test loading state:** Render or trigger loading state. Verify spinner/skeleton is visible and interactive elements are disabled.
@@ -69,7 +69,7 @@ For critical user flows that span multiple components:
 
 ### 5. Set Up Test Utilities (If Missing)
 
-If `apps/web/__tests__/test-utils.tsx` does not exist, create it with:
+If `apps/web/test/test-utils.tsx` does not exist and several tests need it, create it with:
 
 - A `renderWithProviders` function that wraps the component in `<Provider>` with a configurable store.
 - A `createTestStore` function that creates a store with optional preloaded state.
@@ -77,7 +77,7 @@ If `apps/web/__tests__/test-utils.tsx` does not exist, create it with:
 
 ### 6. Verify Test Coverage
 
-- Run `pnpm test --coverage` to check coverage numbers.
+- Run `pnpm --filter web exec vitest run --coverage` to check coverage numbers (requires `@vitest/coverage-v8`, which is not installed by default).
 - Aim for at least 80% line coverage on slices (reducers and thunks are critical).
 - Aim for at least 70% line coverage on components (focus on state rendering and interactions, not styling).
 - Every state in the state matrix should have at least one corresponding test.
@@ -86,9 +86,9 @@ If `apps/web/__tests__/test-utils.tsx` does not exist, create it with:
 
 | File | Action | Description |
 | ---- | ------ | ----------- |
-| `apps/web/__tests__/features/<feature>/<feature>Slice.test.ts` | Create | Slice tests: reducers, thunks, selectors |
-| `apps/web/__tests__/components/<feature>/<ComponentName>.test.tsx` | Create | Component render + interaction tests |
-| `apps/web/__tests__/test-utils.tsx` | Create (if missing) | Shared test utilities with renderWithProviders |
+| `apps/web/features/<feature>/__tests__/<feature>Slice.test.ts` | Create | Slice tests: reducers, thunks, selectors |
+| `apps/web/components/<feature>/__tests__/<component-name>.test.tsx` | Create | Component render + interaction tests |
+| `apps/web/test/test-utils.tsx` | Create (if missing) | Shared test utilities with renderWithProviders |
 
 ## Verification
 

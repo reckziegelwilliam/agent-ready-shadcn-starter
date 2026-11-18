@@ -17,7 +17,7 @@ A paginated, sortable, filterable data table for managing users on an admin dash
 
 ### Screen: Users Dashboard
 
-**Route:** `/dashboard/users`
+**Route:** `/dashboard`
 
 **Description:** A full-width data table with a toolbar above it (search input, filter controls) and pagination controls below it.
 

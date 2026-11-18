@@ -26,50 +26,51 @@ _List everything the agent should read before starting._
 
 _Step-by-step build order. Number each step. Group related steps under headings._
 
-### 1. Define Types
+### 1. Build the API (if the feature needs data)
 
-Create the TypeScript interfaces from the spec's Data Models section.
+Follow the existing modules (e.g. `apps/api/src/tasks/`).
 
-- File: `apps/web/features/[feature]/types.ts`
-- Export all interfaces that other files will import.
+- NestJS: `apps/api/src/[feature]/` with `*.module.ts`, `*.controller.ts`, `*.service.ts` (in-memory data, `delay()` helper, built-in Nest exceptions). Register the module in `apps/api/src/app.module.ts`.
+- Demo mode: mirror the same endpoints in `apps/web/lib/demo-api/store.ts` and add route handlers under `apps/web/app/api/[feature]/`, so the web app also works without the NestJS API. Same paths, payloads and error messages.
 
-### 2. Create the Zod Schemas
+### 2. Build the Redux Slice (types live here)
 
-Define validation schemas matching the spec's Validation Rules.
+Create the state slice with async thunks for each API endpoint. Types from the spec's Data Models section are exported from the slice file; there is no separate `types.ts`.
 
-- File: `apps/web/features/[feature]/schemas.ts`
-- Import and use `z` from `zod`.
-- Export each schema and its inferred type.
+- File: `apps/web/features/[feature]/[feature]Slice.ts`
+- Call endpoints as `${API_URL}/...` with `API_URL` imported from `@/lib/api`.
+- Follow the async thunk pattern: `pending` sets loading, `fulfilled` sets data, `rejected` sets error. Distinguish network failures from server errors.
+- Export the interfaces, the thunks and actions, and the reducer as the default export.
 
-### 3. Build the Redux Slice
-
-Create the state slice with async thunks for each API endpoint.
-
-- File: `apps/web/features/[feature]/slice.ts`
-- Follow the async thunk pattern: `pending` sets loading, `fulfilled` sets data, `rejected` sets error.
-- Export the reducer, actions, and selectors.
-
-### 4. Build the UI Components
+### 3. Build the UI Components
 
 Create each component listed in the spec's Screens/Components section.
 
-- Directory: `apps/web/features/[feature]/components/`
-- One file per component.
+- Directory: `apps/web/components/[feature]/`
+- One kebab-case file per component (e.g. `[feature]-form.tsx`).
+- Zod schemas for a form live at the top of that form component, with `z.infer` for the form values type.
 - Use shadcn/ui primitives from `@workspace/ui/components/`.
 - Implement every state from the spec's States section.
 
-### 5. Create the Page
+### 4. Create the Page
 
 Wire everything together in the Next.js page.
 
 - File: `apps/web/app/[route]/page.tsx`
-- Import components, connect to Redux store.
+- Import components, connect to Redux via `useAppDispatch` / `useAppSelector` from `@/lib/store/hooks`.
 
-### 6. Register the Slice
+### 5. Register the Slice
 
-Add the slice reducer to the root store.
+Add the slice reducer to `makeStore()`.
 
-- File: `apps/web/lib/store.ts`
+- File: `apps/web/lib/store/store.ts`
+- Import from `@/features/[feature]/[feature]Slice`.
+
+### 6. Write Tests
+
+- `apps/web/features/[feature]/__tests__/[feature]Slice.test.ts` -- reducers and thunk state transitions.
+- `apps/web/components/[feature]/__tests__/*.test.tsx` -- component behavior (Vitest + Testing Library).
+- If you added endpoints, add cases to `apps/web/lib/demo-api/__tests__/routes.test.ts`.
 
 ## Output
 
@@ -77,12 +78,15 @@ _List every file the agent should create or modify._
 
 | File | Action | Description |
 | ---- | ------ | ----------- |
-| `apps/web/features/[feature]/types.ts` | Create | TypeScript interfaces |
-| `apps/web/features/[feature]/schemas.ts` | Create | Zod validation schemas |
-| `apps/web/features/[feature]/slice.ts` | Create | Redux Toolkit slice |
-| `apps/web/features/[feature]/components/ComponentName.tsx` | Create | UI component |
+| `apps/api/src/[feature]/*.ts` | Create | NestJS module, controller, service (if needed) |
+| `apps/api/src/app.module.ts` | Modify | Register the module |
+| `apps/web/lib/demo-api/store.ts` | Modify | Demo-mode mirror of the endpoints |
+| `apps/web/app/api/[feature]/**/route.ts` | Create | Demo-mode route handlers |
+| `apps/web/features/[feature]/[feature]Slice.ts` | Create | Types, thunks, Redux Toolkit slice |
+| `apps/web/components/[feature]/*.tsx` | Create | UI components (forms include their Zod schemas) |
 | `apps/web/app/[route]/page.tsx` | Create | Next.js page |
-| `apps/web/lib/store.ts` | Modify | Register new slice |
+| `apps/web/lib/store/store.ts` | Modify | Register new slice |
+| `apps/web/features/[feature]/__tests__/[feature]Slice.test.ts` | Create | Slice tests |
 
 ## Verification
 

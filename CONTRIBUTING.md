@@ -38,31 +38,35 @@ Feature examples are the core content of this repo. Each one demonstrates the fu
 
 ### Directory structure
 
-Create a new directory under `examples/`:
+Scaffold the files with the generator:
+
+```bash
+pnpm turbo gen feature
+```
+
+It creates:
 
 ```
-examples/your-feature/
-├── README.md              # Overview and what this example demonstrates
-├── spec.md                # The feature specification
-├── prompts/               # Prompt packs used to generate the feature
-│   ├── 01-setup.md        # Initial setup prompt
-│   ├── 02-components.md   # Component generation prompt
-│   └── 03-state.md        # State management prompt
-├── review-notes.md        # What the AI got wrong and how it was fixed
-└── screenshots/           # Before/after screenshots
+packages/specs/your-feature.md          # The feature specification
+packages/specs/your-feature-states.md   # The state matrix
+packages/prompts/build-your-feature.md  # The prompt pack
+examples/your-feature/README.md         # Overview, key patterns, file listing
+examples/your-feature/review.md         # What the AI got wrong and how it was fixed
+apps/web/app/your-route/page.tsx        # Page stub
+apps/web/components/your-feature/index.ts
 ```
 
 ### Requirements for a complete example
 
 - [ ] **Spec** -- Clear description of what the feature does, acceptance criteria, edge cases
-- [ ] **Prompt pack** -- Numbered prompts that walk through implementation step by step
+- [ ] **Prompt pack** -- A `build-{feature}.md` prompt that walks through implementation step by step
 - [ ] **Working implementation** -- Code in `apps/web/` and/or `apps/api/` that builds and runs
 - [ ] **Review notes** -- Honest documentation of what AI got wrong and how you fixed it
 - [ ] **Update the feature table** in README.md
 
 ### Implementation goes in the apps
 
-The actual code lives in `apps/web/` and `apps/api/`. The `examples/` directory contains only the documentation (spec, prompts, review notes). This keeps the working code in the real app structure where it can be tested and built.
+The actual code lives in `apps/web/` and `apps/api/`. The `examples/` directory contains only the documentation (README and review notes); specs and prompts live in `packages/specs/` and `packages/prompts/`. This keeps the working code in the real app structure where it can be tested and built.
 
 ## Writing a spec
 
@@ -139,9 +143,9 @@ Each prompt should include:
 3. **Step-by-step instructions** -- Ordered implementation steps
    ```markdown
    ## Steps
-   1. Create the validation schema in `lib/validations/auth.ts`
-   2. Create the LoginForm component in `components/auth/login-form.tsx`
-   3. Wire up the Redux auth slice in `features/auth/authSlice.ts`
+   1. Create the Redux auth slice in `apps/web/features/auth/authSlice.ts`
+   2. Create the LoginForm component (with its zod schema) in `apps/web/components/auth/login-form.tsx`
+   3. Render it from `apps/web/app/(auth)/login/page.tsx`
    ```
 
 4. **Verification criteria** -- How to confirm the output is correct
@@ -155,7 +159,7 @@ Each prompt should include:
 
 ### Naming
 
-Number prompts in execution order: `01-setup.md`, `02-components.md`, `03-state.md`.
+Feature prompts are named `build-{feature}.md` and live in `packages/prompts/`. Order the steps inside the prompt in execution order. Reusable prompts go in `packages/prompts/general/`.
 
 ### Tips for better prompts
 
@@ -176,15 +180,15 @@ Number prompts in execution order: `01-setup.md`, `02-components.md`, `03-state.
 
 - App Router with route groups for related pages
 - shadcn/ui components imported from `@workspace/ui`
-- Redux Toolkit slices in `features/{feature}/`
+- Redux Toolkit slices in `features/{feature}/{feature}Slice.ts` (types exported from the slice); components in `components/{feature}/`
 - React Hook Form + Zod for form handling
 - Tailwind v4 utility classes, no inline styles
 
 ### Backend (NestJS)
 
-- Module-based architecture
-- DTOs with class-validator
-- One module per domain concept
+- Module-based architecture: `{name}.module.ts`, `{name}.controller.ts`, `{name}.service.ts`
+- Request bodies typed inline or as interfaces; services validate input and throw built-in Nest exceptions (no class-validator yet)
+- One module per domain concept, mirrored for demo mode in `apps/web/lib/demo-api/` + `apps/web/app/api/`
 
 ### File naming
 

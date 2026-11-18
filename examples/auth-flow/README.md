@@ -16,32 +16,38 @@ This example demonstrates how an AI agent builds a complete authentication flow 
 - **UI:** shadcn/ui `Card`, `Input`, `Button`, `Form`, `Label`, `Alert` components
 - **Routing:** Next.js App Router with an `(auth)` route group for shared layout
 
-## Files Produced
+## Files
 
 ```
 apps/web/features/auth/
-  types.ts              -- User, AuthState, request/response interfaces
-  schemas.ts            -- loginSchema, signupSchema, forgotPasswordSchema
-  slice.ts              -- Auth slice with login, register, forgotPassword thunks
-  components/
-    auth-layout.tsx     -- Centered card layout shared by all auth screens
-    password-input.tsx  -- Input with show/hide password toggle
-    login-form.tsx      -- Login form component
-    signup-form.tsx     -- Signup form with password strength indicator
-    forgot-password-form.tsx -- Forgot password with inline success state
+  authSlice.ts          -- User/AuthState types; loginUser, registerUser, forgotPassword thunks; clearError, logout
+  __tests__/authSlice.test.ts
+
+apps/web/components/auth/
+  auth-layout.tsx       -- Centered card layout shared by all auth screens
+  login-form.tsx        -- Login form + loginSchema
+  signup-form.tsx       -- Signup form + signup schema (confirm-password match)
+  forgot-password-form.tsx -- Forgot password form + inline success state
+  demo-credentials.tsx  -- Demo-mode hint on the login page
+  __tests__/login-form.test.tsx
 
 apps/web/app/(auth)/
-  layout.tsx            -- Route group layout wrapping AuthLayout
-  login/page.tsx        -- Login page
+  layout.tsx            -- Route group layout (pass-through)
+  login/page.tsx        -- Login page (renders LoginForm inside AuthLayout)
   signup/page.tsx       -- Signup page
   forgot-password/page.tsx -- Forgot password page
+
+apps/api/src/auth/      -- NestJS auth module (login, register, forgot-password)
+apps/web/app/api/auth/  -- Demo-mode route handlers mirroring it (lib/demo-api/store.ts)
 ```
+
+> The spec and prompt also describe a password visibility toggle and a password strength indicator. The current implementation doesn't include those yet.
 
 ## How to Reproduce
 
 1. Read the spec: [`packages/specs/auth-flow.md`](../../packages/specs/auth-flow.md)
 2. Feed the prompt to your AI agent: [`packages/prompts/build-auth-flow.md`](../../packages/prompts/build-auth-flow.md)
-3. The agent produces the files listed above.
+3. Compare the result with the files listed above.
 4. Run the review: [`packages/review-checklists/full-feature.md`](../../packages/review-checklists/full-feature.md)
 
 ## How to Run
@@ -61,7 +67,7 @@ pnpm dev
 - **Spec-driven development:** The spec defines every state, validation rule, and acceptance criterion. The agent implements them all.
 - **Form + validation pipeline:** `zod` schema -> `react-hook-form` resolver -> field-level error rendering -> async submission.
 - **State machine in Redux:** The `status` field drives the UI: idle shows the form, loading disables it, error shows a banner, success triggers navigation.
-- **Shared layout via route groups:** The `(auth)` route group applies `AuthLayout` to all auth pages without affecting other routes.
+- **Shared layout:** Every auth page renders inside `AuthLayout`, grouped under the `(auth)` route group without affecting URLs.
 
 ## Review Notes
 

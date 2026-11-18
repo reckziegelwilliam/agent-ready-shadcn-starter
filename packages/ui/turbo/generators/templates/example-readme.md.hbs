@@ -18,12 +18,15 @@ apps/web/app/{{stripSlash route}}/
 
 apps/web/components/{{name}}/
   index.ts           # Component barrel file
+  *.tsx              # Feature UI components (forms include their Zod schemas)
+  __tests__/         # Component tests
 
 apps/web/features/{{name}}/
-  types.ts           # TypeScript interfaces
-  schemas.ts         # Zod validation schemas
-  slice.ts           # Redux Toolkit slice
-  components/        # Feature-specific UI components
+  {{camelCase name}}Slice.ts   # Types + Redux Toolkit slice
+  __tests__/         # Slice tests
+
+apps/api/src/{{name}}/        # NestJS module (if the feature needs an API)
+apps/web/app/api/{{name}}/    # Demo-mode route handlers mirroring it
 
 packages/specs/
   {{name}}.md        # Feature specification

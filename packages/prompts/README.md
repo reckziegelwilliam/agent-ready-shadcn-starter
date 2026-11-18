@@ -27,14 +27,28 @@ Every prompt follows a consistent template (see `_template.md`):
 ## Available Prompts
 
 ### Feature-Specific
-- [`build-auth-flow.md`](./build-auth-flow.md) -- Build the complete auth flow from the auth spec
-- [`build-dashboard-table.md`](./build-dashboard-table.md) -- Build the dashboard data table from the table spec
+One per worked example in `examples/`:
+
+- [`build-auth-flow.md`](./build-auth-flow.md) -- Login, signup, and forgot-password flows from the auth spec
+- [`build-dashboard-table.md`](./build-dashboard-table.md) -- Data table with sorting, filtering, and pagination
+- [`build-settings-page.md`](./build-settings-page.md) -- Tabbed settings with dirty state and optimistic toggles
+- [`build-multi-step-wizard.md`](./build-multi-step-wizard.md) -- Multi-step onboarding wizard with per-step validation
+- [`build-optimistic-crud.md`](./build-optimistic-crud.md) -- Task list with optimistic create/edit/delete and rollback
+- [`build-file-upload.md`](./build-file-upload.md) -- Drag-and-drop upload with preview, progress, and retry
 
 ### General-Purpose (`general/`)
 - [`new-feature-from-spec.md`](./general/new-feature-from-spec.md) -- Turn any spec into a feature implementation
-- [`add-shadcn-component.md`](./general/add-shadcn-component.md) -- Add and customize a shadcn/ui component
+- [`spec-to-page.md`](./general/spec-to-page.md) -- Turn a spec into a Next.js page and components
+- [`spec-to-api.md`](./general/spec-to-api.md) -- Turn a spec into a NestJS module
 - [`create-redux-slice.md`](./general/create-redux-slice.md) -- Create a new Redux Toolkit slice
+- [`add-shadcn-component.md`](./general/add-shadcn-component.md) -- Add and customize a shadcn/ui component
+- [`add-states.md`](./general/add-states.md) -- Implement the states a state matrix marks as not implemented or partial
+- [`accessibility-pass.md`](./general/accessibility-pass.md) -- Audit and fix accessibility gaps
+- [`testing-pass.md`](./general/testing-pass.md) -- Add tests for an existing feature
+- [`refactor-to-production.md`](./general/refactor-to-production.md) -- Harden first-pass AI output for production
 - [`review-checklist.md`](./general/review-checklist.md) -- Run an AI-assisted code review
+
+New feature prompts are scaffolded by `pnpm turbo gen feature` (as `build-{name}.md`).
 
 ## How to Use
 

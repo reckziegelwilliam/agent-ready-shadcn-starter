@@ -32,7 +32,7 @@ Based on the files being reviewed:
 | -------------------- | ---------------- |
 | A `.tsx` component file | `frontend-component.md` |
 | A `route.ts` or API handler | `api-endpoint.md` |
-| A `slice.ts` file | `redux-slice.md` |
+| A `*Slice.ts` file | `redux-slice.md` |
 | An entire feature | `full-feature.md` (runs all others too) |
 
 If reviewing a full feature, start with `full-feature.md` which references the others.
