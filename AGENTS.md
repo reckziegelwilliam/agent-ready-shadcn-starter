@@ -31,8 +31,6 @@ This repo is a **hardening framework** for AI-generated UI: every feature is bui
 
    Work through the instructions in order (data layer, then UI, then wiring) and run each prompt's Verification section.
 
-   Some older prompts (notably `build-auth-flow.md` and `build-dashboard-table.md`) list output paths like `apps/web/features/{feature}/components/` or `slice.ts`. The code in this repo settled on a different layout. When a prompt disagrees with the existing code, **follow the existing code layout** described under "Where the code lives" below.
-
 4. **Review against the checklists.** Checklists live in `packages/review-checklists/`:
    - `frontend-component.md` for any `.tsx` component
    - `redux-slice.md` for Redux Toolkit slices
@@ -74,8 +72,11 @@ Run a single workspace with a filter, for example `pnpm --filter web test` or `p
 ```
 apps/web/                 Next.js 16 App Router frontend (port 3000)
   app/                    Routes: (auth)/, dashboard/, settings/, wizard/, items/, upload/, compare/, quality/
-  components/{feature}/   Feature components (kebab-case files)
-  features/{feature}/     Redux Toolkit slices ({feature}Slice.ts) and __tests__/
+  app/api/                Demo-mode route handlers mirroring apps/api (used when NEXT_PUBLIC_API_URL is unset)
+  components/{feature}/   Feature components (kebab-case files; forms define their zod schema) and __tests__/
+  features/{feature}/     Redux Toolkit slice + its exported types ({feature}Slice.ts) and __tests__/
+  lib/api.ts              API_URL: NestJS API or the built-in demo API
+  lib/demo-api/           In-memory port of the NestJS services for demo mode, plus tests
   lib/store/              Redux store (store.ts), typed hooks (hooks.ts), provider
   lib/mock-data/          Mock data for the dashboard table
   lib/comparisons/        Data for the /compare before/after viewer

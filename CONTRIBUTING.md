@@ -143,9 +143,9 @@ Each prompt should include:
 3. **Step-by-step instructions** -- Ordered implementation steps
    ```markdown
    ## Steps
-   1. Create the validation schema in `lib/validations/auth.ts`
-   2. Create the LoginForm component in `components/auth/login-form.tsx`
-   3. Wire up the Redux auth slice in `features/auth/authSlice.ts`
+   1. Create the Redux auth slice in `apps/web/features/auth/authSlice.ts`
+   2. Create the LoginForm component (with its zod schema) in `apps/web/components/auth/login-form.tsx`
+   3. Render it from `apps/web/app/(auth)/login/page.tsx`
    ```
 
 4. **Verification criteria** -- How to confirm the output is correct
@@ -180,15 +180,15 @@ Feature prompts are named `build-{feature}.md` and live in `packages/prompts/`. 
 
 - App Router with route groups for related pages
 - shadcn/ui components imported from `@workspace/ui`
-- Redux Toolkit slices in `features/{feature}/`
+- Redux Toolkit slices in `features/{feature}/{feature}Slice.ts` (types exported from the slice); components in `components/{feature}/`
 - React Hook Form + Zod for form handling
 - Tailwind v4 utility classes, no inline styles
 
 ### Backend (NestJS)
 
-- Module-based architecture
-- DTOs with class-validator
-- One module per domain concept
+- Module-based architecture: `{name}.module.ts`, `{name}.controller.ts`, `{name}.service.ts`
+- Request bodies typed inline or as interfaces; services validate input and throw built-in Nest exceptions (no class-validator yet)
+- One module per domain concept, mirrored for demo mode in `apps/web/lib/demo-api/` + `apps/web/app/api/`
 
 ### File naming
 

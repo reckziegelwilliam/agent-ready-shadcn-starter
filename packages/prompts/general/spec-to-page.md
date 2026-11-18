@@ -35,8 +35,8 @@ If a state matrix file exists, read it. For every state marked "Not implemented"
 
 ### 3. Define TypeScript Types and Zod Schemas
 
-- Create `apps/web/features/<feature>/types.ts` with all interfaces from the spec's data model section.
-- Create `apps/web/features/<feature>/schemas.ts` with Zod schemas matching every validation rule. Export inferred types using `z.infer<typeof schema>`.
+- Export all interfaces from the spec's data model section from the slice file (`apps/web/features/<feature>/<feature>Slice.ts`, step 4). There is no separate `types.ts`.
+- Define each Zod schema at the top of the form component that uses it (`apps/web/components/<feature>/*-form.tsx`), with `z.infer<typeof schema>` for the form values type.
 
 ### 4. Build the Redux Slice
 
@@ -89,10 +89,8 @@ If a state matrix file exists, read it. For every state marked "Not implemented"
 
 | File | Action | Description |
 | ---- | ------ | ----------- |
-| `apps/web/features/<feature>/types.ts` | Create | TypeScript interfaces from spec |
-| `apps/web/features/<feature>/schemas.ts` | Create | Zod validation schemas |
-| `apps/web/features/<feature>/<feature>Slice.ts` | Create | Redux slice with async thunks |
-| `apps/web/components/<feature>/*.tsx` | Create | UI components (one per file) |
+| `apps/web/features/<feature>/<feature>Slice.ts` | Create | Types + Redux slice with async thunks |
+| `apps/web/components/<feature>/*.tsx` | Create | UI components (one per file; forms include their Zod schema) |
 | `apps/web/app/<route>/page.tsx` | Create | Next.js page wiring everything together |
 | `apps/web/lib/store/store.ts` | Modify | Register new slice reducer |
 

@@ -11,34 +11,32 @@
 - **Existing reference:** `apps/api/src/auth/` (and `tasks/`, `settings/`, `uploads/`, `onboarding/`) demonstrate the established patterns for controllers, services, and error handling
 - **Data:** The existing modules keep data in memory inside the service (no database). Follow that unless the spec says otherwise.
 - **Error responses:** Use NestJS built-in exceptions (`BadRequestException`, `NotFoundException`, `ConflictException`, `UnauthorizedException`) for predictable HTTP status codes
-- **Not installed yet:** `class-validator`, `class-transformer`, a global `ValidationPipe`, TypeORM and `@nestjs/config` are not part of the API today. The existing controllers type request bodies inline. If the feature needs DTO validation, a database or config, add the dependency (`pnpm --filter @workspace/api add <pkg>`) and wire it up explicitly as part of the change; the steps below that mention DTO decorators assume you have done so.
+- **Validation:** There is no `class-validator`, `ValidationPipe`, DTO folder, database or `@nestjs/config` in the API today. Request bodies are typed inline in the controller (or as interfaces in the service), and the service checks required fields itself and throws `BadRequestException` (see `apps/api/src/onboarding/onboarding.service.ts`). Only add class-validator, a database or config if the spec needs it, and then as an explicit, separate step.
+- **Demo mode:** The web app can run without this API. `apps/web/lib/demo-api/store.ts` mirrors every service in memory and `apps/web/app/api/**/route.ts` exposes the same paths. Every endpoint you add or change here must be mirrored there.
+- **Tests:** Vitest, in `apps/api/src/<feature>/__tests__/` (see `apps/api/src/auth/__tests__/auth.service.test.ts`).
 
 ## Input
 
 1. Read the product spec file provided by the user (e.g., `packages/specs/<feature>.md`).
-2. Review the existing auth module for patterns: `apps/api/src/auth/auth.module.ts`, `apps/api/src/auth/auth.controller.ts`, `apps/api/src/auth/auth.service.ts`.
+2. Review an existing module for patterns: `apps/api/src/tasks/tasks.module.ts`, `tasks.controller.ts`, `tasks.service.ts` (CRUD) and `apps/api/src/onboarding/onboarding.service.ts` (validation).
 3. Review the app module: `apps/api/src/app.module.ts` to understand how modules are registered.
-4. Check existing DTOs in `apps/api/src/auth/dto/` for naming and validation conventions.
+4. Review the demo-mode mirror: `apps/web/lib/demo-api/store.ts` and `apps/web/app/api/tasks/`.
 
 ## Instructions
 
-### 1. Define DTOs
+### 1. Define the Request/Response Types
 
-Create request and response DTOs in `apps/api/src/<feature>/dto/`.
-
-- Create one DTO file per operation (e.g., `create-<feature>.dto.ts`, `update-<feature>.dto.ts`).
-- Use `class-validator` decorators: `@IsString()`, `@IsEmail()`, `@IsOptional()`, `@MinLength()`, `@MaxLength()`, `@IsEnum()`, etc.
-- Use `class-transformer` `@Exclude()` or `@Expose()` for response DTOs that should omit sensitive fields.
-- Export each DTO class.
+- Declare interfaces for the entity and each request body at the top of `apps/api/src/<feature>/<feature>.service.ts` (e.g. `interface CreateTaskDto`), matching the spec's API Contracts exactly. Export the entity interface.
 
 ### 2. Create the Service
 
 Create `apps/api/src/<feature>/<feature>.service.ts`.
 
-- Inject any required dependencies (repository, config service, other services) via constructor.
-- Implement one method per operation defined in the spec.
-- Throw appropriate NestJS exceptions for error cases: `NotFoundException` for missing resources, `ConflictException` for duplicates, `BadRequestException` for invalid input that passed DTO validation.
-- Return plain objects or entities, not HTTP responses (the controller handles that).
+- `@Injectable()` class holding data in memory (seed a few realistic records).
+- Add a small `delay()` helper so the UI's loading states are visible, like the other services.
+- Implement one async method per operation defined in the spec.
+- Validate required fields and enums yourself and throw NestJS exceptions: `BadRequestException` for invalid input, `NotFoundException` for missing resources, `ConflictException` for duplicates, `UnauthorizedException` for bad credentials. Messages are what the UI shows, so make them human-readable.
+- Return plain objects (the controller returns them as JSON).
 
 ### 3. Create the Controller
 
@@ -46,17 +44,16 @@ Create `apps/api/src/<feature>/<feature>.controller.ts`.
 
 - Use `@Controller('<feature>')` decorator with the resource name as the route prefix.
 - Create one handler method per endpoint: `@Get()`, `@Post()`, `@Patch()`, `@Delete()`.
-- Use `@Body()` for request DTOs, `@Param()` for URL parameters, `@Query()` for query strings.
-- Apply `@HttpCode()` where needed (e.g., 204 for delete, 201 for create).
-- Keep handlers thin: validate input shape via DTO, delegate to service, return result.
+- Use `@Body()` with the inline/interface body type, `@Param()` for URL parameters, `@Query()` for query strings.
+- NestJS returns 201 for `@Post()` and 200 otherwise; only add `@HttpCode()` if the spec requires something different.
+- Keep handlers thin: delegate to the service and return the result.
 
 ### 4. Create the Module
 
 Create `apps/api/src/<feature>/<feature>.module.ts`.
 
-- Import any required modules (e.g., `TypeOrmModule.forFeature([Entity])` if using a database).
-- Register the controller and service as providers.
-- Export the service if other modules need it.
+- Register the controller and the service as a provider.
+- Export the service only if other modules need it.
 
 ### 5. Register in App Module
 
@@ -64,43 +61,42 @@ Modify `apps/api/src/app.module.ts`.
 
 - Import the new feature module in the `imports` array.
 
-### 6. Add Entity (if applicable)
+### 6. Mirror the Endpoints for Demo Mode
 
-If the spec defines a data model that should be persisted:
-
-- Create `apps/api/src/entities/<feature>.entity.ts` with TypeORM decorators.
-- Define columns matching the spec's data model, with appropriate types and constraints.
-- Register the entity in the TypeORM module configuration.
+- Port the service logic into `apps/web/lib/demo-api/store.ts` (same seed data, same messages; throw `DemoHttpError(status, message)` where the service throws a Nest exception).
+- Add route handlers at `apps/web/app/api/<feature>/route.ts` (and `[id]/route.ts` for item routes) using `handle()` and `readJson()` from `apps/web/lib/demo-api/http.ts`. Use status 201 for POST handlers, like NestJS.
+- Add cases to `apps/web/lib/demo-api/__tests__/routes.test.ts`.
 
 ### 7. Test the Endpoints
 
-- Use `curl` or a REST client to test each endpoint.
-- Verify that valid requests return the expected status code and response shape.
-- Verify that invalid DTOs return 400 with a structured validation error array.
-- Verify that missing resources return 404.
-- Verify that duplicate/conflict operations return 409.
+- Add service tests in `apps/api/src/<feature>/__tests__/<feature>.service.test.ts`.
+- Use `curl` against `http://localhost:4000/<feature>` (NestJS) and `http://localhost:3000/api/<feature>` (demo mode) and compare responses.
+- Verify valid requests return the expected status code and response shape.
+- Verify invalid input returns 400 with NestJS's error body: `{ "message": "...", "error": "Bad Request", "statusCode": 400 }`.
+- Verify missing resources return 404 and duplicates return 409.
 
 ## Output
 
 | File | Action | Description |
 | ---- | ------ | ----------- |
-| `apps/api/src/<feature>/dto/create-<feature>.dto.ts` | Create | Request DTO with class-validator decorators |
-| `apps/api/src/<feature>/dto/update-<feature>.dto.ts` | Create | Update DTO (partial, uses `PartialType`) |
-| `apps/api/src/<feature>/<feature>.service.ts` | Create | Business logic with error handling |
-| `apps/api/src/<feature>/<feature>.controller.ts` | Create | REST endpoints with proper HTTP codes |
+| `apps/api/src/<feature>/<feature>.service.ts` | Create | Types, in-memory data, business logic and validation |
+| `apps/api/src/<feature>/<feature>.controller.ts` | Create | REST endpoints |
 | `apps/api/src/<feature>/<feature>.module.ts` | Create | NestJS module wiring controller + service |
-| `apps/api/src/entities/<feature>.entity.ts` | Create | TypeORM entity (if applicable) |
 | `apps/api/src/app.module.ts` | Modify | Register the new feature module |
+| `apps/api/src/<feature>/__tests__/<feature>.service.test.ts` | Create | Service tests |
+| `apps/web/lib/demo-api/store.ts` | Modify | Demo-mode mirror of the service |
+| `apps/web/app/api/<feature>/route.ts` (+ `[id]/route.ts`) | Create | Demo-mode route handlers |
+| `apps/web/lib/demo-api/__tests__/routes.test.ts` | Modify | Route handler tests |
 
 ## Verification
 
 1. **Type check:** Run `pnpm typecheck` from the monorepo root. Zero errors.
 2. **Lint:** Run `pnpm lint`. Zero errors.
-3. **POST with valid body:** Returns 201 with correct response shape.
-4. **POST with invalid body:** Returns 400 with structured validation errors listing each invalid field.
-5. **GET existing resource:** Returns 200 with full resource data.
-6. **GET missing resource:** Returns 404 with descriptive message.
-7. **PATCH with partial update:** Returns 200 with updated fields only changed.
-8. **DELETE existing resource:** Returns 204 with empty body.
+3. **Tests:** Run `pnpm test`. All pass.
+4. **POST with valid body:** Returns 201 with correct response shape.
+5. **POST with invalid body:** Returns 400 with a human-readable `message`.
+6. **GET existing resource:** Returns 200 with full resource data.
+7. **GET/PATCH/DELETE missing resource:** Returns 404 with descriptive message.
+8. **PATCH with partial update:** Returns 200 with only the sent fields changed.
 9. **Conflict operation:** Returns 409 (e.g., creating duplicate email).
-10. **Module isolation:** Service can be injected in other modules if exported.
+10. **Parity:** The same requests against the demo API (`/api/<feature>`) return the same status codes and bodies.

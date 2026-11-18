@@ -17,7 +17,7 @@
 1. Read the component(s) to refactor, as specified by the user.
 2. Read the review checklist: `packages/review-checklists/frontend-component.md` (if it exists).
 3. Read any related slice or hook files that the components depend on.
-4. Check if tests exist for these components in `apps/web/__tests__/` or co-located `*.test.tsx` files.
+4. Check if tests exist for these components in the co-located `__tests__/` folder (e.g. `apps/web/components/<feature>/__tests__/`).
 
 ## Instructions
 
@@ -50,7 +50,7 @@ Identify repeated patterns across the components:
 
 - If multiple components dispatch the same thunk and handle loading/error the same way, extract a custom hook (e.g., `useAuthAction`).
 - If multiple components use the same form pattern (zodResolver + react-hook-form), consider a shared hook that returns the form object.
-- Place custom hooks in `apps/web/hooks/` or `apps/web/features/<feature>/hooks.ts`.
+- Place custom hooks in `apps/web/hooks/` (shared) or next to the feature's components in `apps/web/components/<feature>/`.
 
 ### 4. Add Proper TypeScript Typing
 
@@ -62,7 +62,7 @@ Identify repeated patterns across the components:
 
 ### 5. Remove Duplication
 
-- Extract repeated UI patterns (loading spinners, error banners, empty states) into shared components in `apps/web/components/shared/`.
+- Extract repeated UI patterns (loading spinners, error banners, empty states) into shared components directly in `apps/web/components/` (like `nav.tsx`), or into `packages/ui` if they are generic primitives.
 - Replace inline SVG icons with lucide-react icon components where applicable.
 - Consolidate repeated Tailwind class strings into shared component variants or utility classes.
 
@@ -84,9 +84,9 @@ Identify repeated patterns across the components:
 | File | Action | Description |
 | ---- | ------ | ----------- |
 | `apps/web/components/<feature>/*.tsx` | Modify | Refactored components with a11y fixes |
-| `apps/web/components/shared/*.tsx` | Create | Extracted shared components (spinner, error banner, etc.) |
+| `apps/web/components/*.tsx` | Create | Extracted shared components (spinner, error banner, etc.) |
 | `apps/web/hooks/*.ts` | Create | Custom hooks extracted from repeated logic |
-| `apps/web/features/<feature>/*.ts` | Modify | Improved typing in slices and types |
+| `apps/web/features/<feature>/<feature>Slice.ts` | Modify | Improved typing in the slice and its exported types |
 
 ## Verification
 

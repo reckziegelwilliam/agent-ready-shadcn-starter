@@ -41,7 +41,7 @@ If the default component needs modification:
 
 1. **Additional variants:** Add new variants to the component's `cva` (class-variance-authority) definition. Follow the existing pattern of variant names and values.
 2. **Default prop changes:** Modify default props in the component definition, not at every call site.
-3. **Wrapper components:** If you need a specialized version (e.g., a `ConfirmDialog` wrapping `AlertDialog`), create it in the consuming feature directory (`apps/web/features/{feature}/components/`), not in the shared UI package.
+3. **Wrapper components:** If you need a specialized version (e.g., a `ConfirmDialog` wrapping `AlertDialog`), create it in the consuming feature's components directory (`apps/web/components/{feature}/`), not in the shared UI package.
 
 ### Step 4: Use in Your Feature
 

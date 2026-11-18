@@ -9,7 +9,8 @@ This prompt guides the creation of a new Redux Toolkit slice following the proje
 - **Library:** `@reduxjs/toolkit` v2, `react-redux` v9
 - **Store:** `apps/web/lib/store/store.ts`
 - **Typed hooks:** `apps/web/lib/store/hooks.ts` (`useAppDispatch`, `useAppSelector`)
-- **Convention:** Each feature's slice lives at `apps/web/features/{feature}/slice.ts`
+- **Convention:** Each feature's slice lives at `apps/web/features/{feature}/{feature}Slice.ts` (e.g. `features/tasks/tasksSlice.ts`) and exports its own types. Tests go in `apps/web/features/{feature}/__tests__/`.
+- **API base URL:** `API_URL` from `apps/web/lib/api.ts`
 
 ## Input
 
@@ -17,15 +18,15 @@ This prompt guides the creation of a new Redux Toolkit slice following the proje
 2. The data shape -- what entities and UI state the slice tracks.
 3. API endpoints the slice needs to call (if any).
 4. Review the existing store: `apps/web/lib/store/store.ts`
-5. Review any existing slices for pattern reference: `apps/web/features/*/slice.ts`
+5. Review any existing slices for pattern reference: `apps/web/features/*/*Slice.ts` (e.g. `apps/web/features/tasks/tasksSlice.ts`)
 
 ## Instructions
 
 ### Step 1: Define the State Interface
 
-Create the types file first (if it does not already exist):
+Define and export the interfaces at the top of the slice file (this repo has no separate `types.ts`):
 
-- File: `apps/web/features/{feature}/types.ts`
+- File: `apps/web/features/{feature}/{feature}Slice.ts`
 - Define the entity interface(s).
 - Define the slice state interface with these standard fields:
   ```typescript
@@ -43,14 +44,16 @@ Create the types file first (if it does not already exist):
 
 ### Step 2: Create the Slice
 
-- File: `apps/web/features/{feature}/slice.ts`
+- File: `apps/web/features/{feature}/{feature}Slice.ts`
 
 Follow this structure:
 
 ```typescript
 import { createSlice, createAsyncThunk, type PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "@/lib/store";
-import type { FeatureState } from "./types";
+import type { RootState } from "@/lib/store/store";
+import { API_URL } from "@/lib/api";
+
+export interface FeatureState { /* from Step 1 */ }
 ```
 
 **Initial state:**
@@ -88,23 +91,23 @@ import type { FeatureState } from "./types";
 ### Step 3: Register in the Store
 
 - File: `apps/web/lib/store/store.ts`
-- Import the reducer: `import { featureReducer } from "@/features/{feature}/slice"`.
-- Add it to `configureStore({ reducer: { ..., feature: featureReducer } })`.
+- Import the reducer (default export): `import featureReducer from "@/features/{feature}/{feature}Slice"`.
+- Add it to the `reducer` map in `makeStore()`.
 - Verify the `RootState` type automatically picks up the new slice (it should if `RootState` is inferred from `store.getState`).
 
 ### Step 4: Use in Components
 
-- Import `useAppDispatch` and `useAppSelector` from `@/lib/hooks`.
+- Import `useAppDispatch` and `useAppSelector` from `@/lib/store/hooks`.
 - Dispatch async thunks: `dispatch(fetchItems())`.
 - Select state: `const items = useAppSelector(selectItems)`.
-- Never access `state.feature` directly in components -- always use selectors.
+- Use selectors for derived data. Simple reads like `useAppSelector((state) => state.feature)` are what the existing components do and are fine.
 
 ## Output
 
 | File | Action | Description |
 | ---- | ------ | ----------- |
-| `apps/web/features/{feature}/types.ts` | Create | State and entity interfaces |
-| `apps/web/features/{feature}/slice.ts` | Create | Redux Toolkit slice |
+| `apps/web/features/{feature}/{feature}Slice.ts` | Create | Interfaces + Redux Toolkit slice |
+| `apps/web/features/{feature}/__tests__/{feature}Slice.test.ts` | Create | Slice tests |
 | `apps/web/lib/store/store.ts` | Modify | Register the new reducer |
 
 ## Verification

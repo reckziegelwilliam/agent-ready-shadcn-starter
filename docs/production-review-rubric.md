@@ -146,7 +146,8 @@ AI-generated code often skips security basics.
 
 ### Backend
 
-- [ ] Input validation on all endpoints (DTOs with class-validator)
+- [ ] Input validation on all endpoints. This API has no `class-validator`/`ValidationPipe`: request bodies are typed inline, so the service must check required fields and enums itself and throw `BadRequestException` with a readable message, as `apps/api/src/onboarding/onboarding.service.ts` does. (The auth, tasks, settings and uploads demo endpoints currently accept bodies as-is.) If you add class-validator DTOs, register a global `ValidationPipe` in `apps/api/src/main.ts`.
+- [ ] The demo-mode mirror in `apps/web/lib/demo-api/store.ts` returns the same validation errors
 - [ ] Authentication checks on protected routes
 - [ ] Authorization checks (users can only access their own data)
 - [ ] Rate limiting on auth endpoints

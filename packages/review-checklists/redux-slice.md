@@ -1,10 +1,10 @@
 # Redux Slice Review Checklist
 
-Use this checklist when reviewing a Redux Toolkit slice file (`slice.ts`).
+Use this checklist when reviewing a Redux Toolkit slice file (`apps/web/features/{feature}/{feature}Slice.ts`).
 
 ## State Shape
 
-- [ ] The state interface is explicitly defined in a `types.ts` file and imported.
+- [ ] The state interface is explicitly defined and exported from the slice file.
 - [ ] The state includes a `status` field with values `"idle" | "loading" | "succeeded" | "failed"`.
 - [ ] The state includes an `error` field of type `string | null`.
 - [ ] Initial state values are sensible defaults (empty arrays for lists, `null` for optional objects, `"idle"` for status).

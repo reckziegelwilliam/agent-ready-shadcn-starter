@@ -9,9 +9,14 @@
 - **Table library:** `@tanstack/react-table` v8 (headless -- you provide the rendering)
 - **State management:** Redux Toolkit (`@reduxjs/toolkit`, `react-redux`)
 - **UI components:** Imported from `@workspace/ui/components/` (shadcn/ui primitives)
-- **Feature directory:** `apps/web/features/dashboard/` for all dashboard-related code
-- **Pages directory:** `apps/web/app/dashboard/`
+- **Slice directory:** `apps/web/features/users/` (`usersSlice.ts` plus `__tests__/`)
+- **Components directory:** `apps/web/components/dashboard/` (the table primitives already live here)
+- **Page:** `apps/web/app/dashboard/page.tsx` (route `/dashboard`)
+- **API:** a new `users` module in `apps/api/src/users/`, mirrored for demo mode in `apps/web/lib/demo-api/store.ts` + `apps/web/app/api/users/route.ts`
+- **API base URL:** import `API_URL` from `apps/web/lib/api.ts`
 - **Key pattern:** The table is server-side paginated, sorted, and filtered. All state changes trigger a new API call. The client does not hold the full dataset.
+
+> **Current state of the repo:** the reference implementation (see `examples/dashboard-table/README.md`) is a simpler client-side table over `apps/web/lib/mock-data/users.ts`, built from the generic `DataTable` in `apps/web/components/dashboard/`. This prompt upgrades it to the full server-driven version in the spec. Extend the existing files rather than creating parallel ones.
 
 ## Input
 
@@ -19,26 +24,28 @@
 2. Review available shadcn components: `packages/ui/src/components/`
 3. Review the Redux store: `apps/web/lib/store/store.ts`
 4. Review typed hooks: `apps/web/lib/store/hooks.ts`
+5. Review the existing table: `apps/web/app/dashboard/page.tsx` and `apps/web/components/dashboard/`
+6. Review an existing slice + API pair for conventions: `apps/web/features/tasks/tasksSlice.ts` and `apps/api/src/tasks/`
 
 ## Instructions
 
-### 1. Define Types
+### 1. Build the API Endpoints
 
-Create TypeScript interfaces for the users table domain.
+- `apps/api/src/users/users.service.ts` -- in-memory users seeded from the same data as `apps/web/lib/mock-data/users.ts`; implements paging, sorting, search and filters; `delay()` helper for latency like the other services.
+- `apps/api/src/users/users.controller.ts` -- `GET /users` (query params: page, pageSize, sortBy, sortDir, search, status, role) and `DELETE /users` (body `{ ids }`).
+- `apps/api/src/users/users.module.ts`, registered in `apps/api/src/app.module.ts`.
+- Mirror both endpoints in `apps/web/lib/demo-api/store.ts` and `apps/web/app/api/users/route.ts`, and add cases to `apps/web/lib/demo-api/__tests__/routes.test.ts`.
 
-- File: `apps/web/features/dashboard/types.ts`
-- Define `User`, `UsersTableState`, `UsersResponse`, and `BulkDeleteRequest` as specified in the spec.
-- Export all interfaces.
+### 2. Build the Redux Slice (types live here)
 
-### 2. Build the Redux Slice
+Create the users table slice with async thunks. Types are exported from the slice file; there is no separate `types.ts`.
 
-Create the users table slice with async thunks.
-
-- File: `apps/web/features/dashboard/slice.ts`
+- File: `apps/web/features/users/usersSlice.ts`
+- Export `User`, `UsersTableState`, `UsersResponse`, and `BulkDeleteRequest` as specified in the spec.
 - Initial state matches `UsersTableState` from the spec.
-- Async thunks:
-  - `fetchUsers` -- GET `/api/users` with query params built from current table state (page, pageSize, sortBy, sortDir, search, status, role). On success, store `data`, `totalCount`.
-  - `deleteUsers` -- DELETE `/api/users` with `{ ids }` body. On success, re-fetch current page.
+- Async thunks (call `${API_URL}/users`):
+  - `fetchUsers` -- GET `/users` with query params built from current table state (page, pageSize, sortBy, sortDir, search, status, role). On success, store `data`, `totalCount`.
+  - `deleteUsers` -- DELETE `/users` with `{ ids }` body. On success, re-fetch current page.
 - Table state actions (synchronous):
   - `setPage(page)` -- Updates page, triggers re-fetch.
   - `setPageSize(size)` -- Updates pageSize, resets page to 0, triggers re-fetch.
@@ -61,50 +68,50 @@ pnpm dlx shadcn@latest add table button input select dropdown-menu checkbox badg
 
 ### 4. Build Reusable Table Primitives
 
-These components should be generic enough to reuse for other tables in the app.
+These components should be generic enough to reuse for other tables in the app. Several already exist in `apps/web/components/dashboard/`; update them in place.
 
-**`apps/web/features/dashboard/components/data-table-column-header.tsx`**
+**`apps/web/components/dashboard/data-table-column-header.tsx`** (new)
 - Props: `column` (from `@tanstack/react-table`), `title` (string).
 - Renders the title with a sort button. Shows `ArrowUp`, `ArrowDown`, or `ArrowUpDown` icon from `lucide-react` depending on current sort state.
 - Click cycles: none -> asc -> desc -> none.
 - Sets `aria-sort` on the header cell.
 
-**`apps/web/features/dashboard/components/data-table-pagination.tsx`**
+**`apps/web/components/dashboard/data-table-pagination.tsx`** (exists; switch to server-driven props)
 - Props: `page`, `pageSize`, `totalCount`, `totalPages`, `onPageChange`, `onPageSizeChange`.
 - Renders: "Showing X-Y of Z results" text, Previous/Next buttons (disabled at bounds), page size `Select` with options 10/20/50.
 - Previous/Next buttons use `ChevronLeft` and `ChevronRight` icons.
 
-**`apps/web/features/dashboard/components/data-table-toolbar.tsx`**
+**`apps/web/components/dashboard/data-table-toolbar.tsx`** (exists; add filters and bulk delete)
 - Props: `search`, `onSearchChange`, `statusFilter`, `onStatusFilterChange`, `roleFilter`, `onRoleFilterChange`, `selectedCount`, `onBulkDelete`.
 - Renders: search `Input` with magnifying glass icon, status `Select`, role `Select`.
 - When `selectedCount > 0`, renders a "Delete selected (N)" button that triggers a confirmation dialog.
 - The search input should accept `value` and `onChange` from the parent -- debounce logic lives in the parent component.
 
-**`apps/web/features/dashboard/components/data-table-row-actions.tsx`**
+**`apps/web/components/dashboard/data-table-row-actions.tsx`** (new)
 - Props: `userId` (string).
 - Renders a `DropdownMenu` triggered by an ellipsis icon button.
 - Menu items: View, Edit, Delete. Each fires a callback or navigates.
 - The Delete option uses destructive styling (red text).
 
-**`apps/web/features/dashboard/components/status-badge.tsx`**
+**`apps/web/components/dashboard/status-badge.tsx`** (new; today the badge is inline in `columns.tsx`)
 - Props: `status` ("active" | "inactive" | "suspended").
 - Renders a shadcn `Badge` with variant mapped to status: active = default (green-tinted), inactive = secondary, suspended = destructive.
 
-**`apps/web/features/dashboard/components/data-table-skeleton.tsx`**
+**`apps/web/components/dashboard/data-table-loading.tsx`** (exists)
 - Props: `rows` (number, default 10), `columns` (number, default 7).
 - Renders a `Table` filled with `Skeleton` components matching the real table dimensions.
 
-**`apps/web/features/dashboard/components/data-table-empty.tsx`**
+**`apps/web/components/dashboard/data-table-empty.tsx`** (exists; add clear-filters action)
 - Props: `onClearFilters` callback.
 - Renders an illustration placeholder, "No users found" heading, descriptive text, and a "Clear all filters" button.
 
-**`apps/web/features/dashboard/components/data-table-error.tsx`**
+**`apps/web/components/dashboard/data-table-error.tsx`** (exists)
 - Props: `message` (string), `onRetry` callback.
 - Renders an error icon, the message, and a "Try again" button.
 
 ### 5. Build the Column Definitions
 
-- File: `apps/web/features/dashboard/columns.tsx`
+- File: `apps/web/components/dashboard/columns.tsx` (exists; extend it)
 - Define columns for `@tanstack/react-table` using `createColumnHelper<User>()`:
   - **Select** -- Checkbox column. Header checkbox toggles all. Row checkbox toggles individual.
   - **Name** -- Sortable. Renders the user name as text.
@@ -117,16 +124,16 @@ These components should be generic enough to reuse for other tables in the app.
 
 ### 6. Build the Main Table Component
 
-**`apps/web/features/dashboard/components/users-table.tsx`**
+**`apps/web/components/dashboard/users-table.tsx`** (new), built on the generic `apps/web/components/dashboard/data-table.tsx`
 
 This is the orchestrator component.
 
-- Initializes `useReactTable` with the column definitions and data from Redux.
+- Initializes `useReactTable` (in manual pagination/sorting/filtering mode) with the column definitions and data from Redux.
 - Manages local debounced search state: uses `useState` for the input value and `useEffect` with a 300ms timeout to dispatch `setSearch` to Redux.
 - On mount: dispatches `fetchUsers`.
 - On any filter/sort/page change in Redux: dispatches `fetchUsers` via a `useEffect` that watches the relevant state values.
 - Renders based on `status`:
-  - `"loading"` and no existing data: `DataTableSkeleton`.
+  - `"loading"` and no existing data: `DataTableLoading`.
   - `"loading"` with existing data: Table with reduced opacity (stale data visible while loading).
   - `"failed"`: `DataTableError`.
   - `"succeeded"` with empty data: `DataTableEmpty`.
@@ -135,33 +142,42 @@ This is the orchestrator component.
 
 ### 7. Create the Page
 
-**`apps/web/app/dashboard/users/page.tsx`**
-- Renders `UsersTable`.
-- Page metadata: `title: "Users"`.
+**`apps/web/app/dashboard/page.tsx`** (exists)
+- Replace the mock-data `DataTable` with `UsersTable`.
+- Keep the "Users" heading and description.
 
 ### 8. Register the Slice
 
 - File: `apps/web/lib/store/store.ts`
-- Import `usersReducer` from `features/dashboard/slice` and add it under the `users` key.
+- Import `usersReducer` from `@/features/users/usersSlice` and add it under the `users` key in `makeStore()`.
+
+### 9. Tests
+
+- `apps/web/features/users/__tests__/usersSlice.test.ts` -- reducers and thunk state transitions.
+- Update `apps/web/components/dashboard/__tests__/data-table.test.tsx` for the new behavior.
 
 ## Output
 
 | File | Action | Description |
 | ---- | ------ | ----------- |
-| `apps/web/features/dashboard/types.ts` | Create | TypeScript interfaces |
-| `apps/web/features/dashboard/slice.ts` | Create | Redux slice with async thunks |
-| `apps/web/features/dashboard/columns.tsx` | Create | TanStack Table column definitions |
-| `apps/web/features/dashboard/components/data-table-column-header.tsx` | Create | Sortable column header |
-| `apps/web/features/dashboard/components/data-table-pagination.tsx` | Create | Pagination controls |
-| `apps/web/features/dashboard/components/data-table-toolbar.tsx` | Create | Search + filter toolbar |
-| `apps/web/features/dashboard/components/data-table-row-actions.tsx` | Create | Per-row action dropdown |
-| `apps/web/features/dashboard/components/status-badge.tsx` | Create | Status badge component |
-| `apps/web/features/dashboard/components/data-table-skeleton.tsx` | Create | Loading skeleton |
-| `apps/web/features/dashboard/components/data-table-empty.tsx` | Create | Empty state |
-| `apps/web/features/dashboard/components/data-table-error.tsx` | Create | Error state with retry |
-| `apps/web/features/dashboard/components/users-table.tsx` | Create | Main table orchestrator |
-| `apps/web/app/dashboard/users/page.tsx` | Create | Next.js page |
-| `apps/web/lib/store/store.ts` | Modify | Register users slice |
+| `apps/api/src/users/users.{module,controller,service}.ts` | Create | NestJS users module |
+| `apps/api/src/app.module.ts` | Modify | Register `UsersModule` |
+| `apps/web/lib/demo-api/store.ts` | Modify | Demo-mode users data + logic |
+| `apps/web/app/api/users/route.ts` | Create | Demo-mode route handler |
+| `apps/web/features/users/usersSlice.ts` | Create | Types, async thunks, table state |
+| `apps/web/components/dashboard/columns.tsx` | Modify | Column definitions |
+| `apps/web/components/dashboard/data-table-column-header.tsx` | Create | Sortable column header |
+| `apps/web/components/dashboard/data-table-pagination.tsx` | Modify | Server-driven pagination controls |
+| `apps/web/components/dashboard/data-table-toolbar.tsx` | Modify | Search + filters + bulk delete |
+| `apps/web/components/dashboard/data-table-row-actions.tsx` | Create | Per-row action dropdown |
+| `apps/web/components/dashboard/status-badge.tsx` | Create | Status badge component |
+| `apps/web/components/dashboard/data-table-loading.tsx` | Modify | Loading skeleton |
+| `apps/web/components/dashboard/data-table-empty.tsx` | Modify | Empty state with clear filters |
+| `apps/web/components/dashboard/data-table-error.tsx` | Keep | Error state with retry |
+| `apps/web/components/dashboard/users-table.tsx` | Create | Main table orchestrator |
+| `apps/web/app/dashboard/page.tsx` | Modify | Render `UsersTable` |
+| `apps/web/lib/store/store.ts` | Modify | Register `users` reducer |
+| `apps/web/features/users/__tests__/usersSlice.test.ts` | Create | Slice tests |
 
 ## Verification
 
