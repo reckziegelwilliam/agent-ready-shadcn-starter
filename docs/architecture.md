@@ -150,7 +150,9 @@ The app uses Redux Toolkit with a feature-based slice architecture:
 The NestJS backend exposes RESTful endpoints. The frontend communicates via:
 
 - RTK async thunks for data fetching
-- Standard `fetch` against `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:4000`)
+- Standard `fetch` against `API_URL` from `apps/web/lib/api.ts`
+
+When `NEXT_PUBLIC_API_URL` is unset (or a same-origin path), `API_URL` is `/api` and requests go to **demo-mode route handlers** in `apps/web/app/api/`. They are backed by `apps/web/lib/demo-api/store.ts`, an in-memory port of the NestJS services with the same paths, payloads, error bodies and simulated latency/failures, so the web app runs on its own (e.g. on Vercel). `apps/web/.env.development` points `next dev` at the NestJS API on port 4000.
 
 ## Build pipeline
 

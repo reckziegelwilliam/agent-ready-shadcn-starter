@@ -52,7 +52,11 @@ Then open the new page and try the unhappy paths: empty data, a slow network, ba
 
 ### About the deploy button
 
-The button deploys the Next.js web app, same as the live demo. The landing page, `/dashboard`, `/compare` and `/quality` work on their own. Login/signup, `/settings`, `/wizard` (submit), `/items` and `/upload` call the NestJS API in `apps/api`, which the button does not deploy, so on a fresh deploy those pages show an error state. To make them work, host the API somewhere and set `NEXT_PUBLIC_API_URL` on the Vercel project (and add your web URL to the CORS list in `apps/api/src/main.ts`). Locally, `pnpm dev` runs both.
+The button deploys the Next.js web app, and every page works on its own. With no `NEXT_PUBLIC_API_URL` set, the web app runs in **demo mode**: login/signup, `/settings`, `/wizard`, `/items` and `/upload` talk to built-in Next.js route handlers (`apps/web/app/api/`) that mirror the NestJS API with in-memory mock data. Sign in with `demo@example.com` / `password123` (shown on the login page). Demo data resets whenever the server restarts and isn't shared between serverless instances, so it's for trying things out, not for real users. No extra services needed.
+
+Want the real NestJS backend in production? Host `apps/api` somewhere, set `NEXT_PUBLIC_API_URL` to its URL on the Vercel project, redeploy, and add your web URL to the CORS list in `apps/api/src/main.ts`.
+
+Locally, `pnpm dev` runs both apps and the web app talks to the NestJS API (`apps/web/.env.development` sets `NEXT_PUBLIC_API_URL=http://localhost:4000`).
 
 ## Why this exists
 

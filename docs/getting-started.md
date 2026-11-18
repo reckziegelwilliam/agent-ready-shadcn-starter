@@ -83,14 +83,18 @@ See [architecture.md](architecture.md) for a deeper dive into how the pieces fit
 
 ## Environment variables
 
-Copy the example env file if one exists, or create `.env.local` in the app directory:
+The web app reads one variable, `NEXT_PUBLIC_API_URL`:
 
-```bash
-# apps/web/.env.local
-NEXT_PUBLIC_API_URL=http://localhost:4000
-```
+| Value | What the web app calls |
+|-------|------------------------|
+| An absolute URL, e.g. `http://localhost:4000` | That API (normally the NestJS app in `apps/api`) |
+| Unset, or a same-origin path like `/api` | **Demo mode**: built-in route handlers in `apps/web/app/api/` with in-memory mock data that mirror the NestJS API |
 
-Environment files (`.env*`) are gitignored. Never commit secrets.
+`apps/web/.env.development` (committed, used only by `next dev`) sets `http://localhost:4000`, so `pnpm dev` runs full stack. A production `next build` without the variable (Vercel, the deploy button) runs in demo mode. Sign in there with `demo@example.com` / `password123`.
+
+To try demo mode locally, run `pnpm --filter web build && pnpm --filter web start`, or comment out the line in `.env.development`. To point a deployment at a hosted API, set the variable in the host's environment settings (or in `apps/web/.env.local` locally); it is inlined at build time, so redeploy after changing it.
+
+`.env`, `.env.local` and `.env.*.local` are gitignored; `apps/web/.env.development` is committed because it holds no secrets. Never commit secrets.
 
 ## Troubleshooting
 

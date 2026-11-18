@@ -99,7 +99,10 @@ docs/                     Architecture, getting started, Claude/Codex guides, ru
 - **Forms:** `react-hook-form` + `@hookform/resolvers` + `zod` (v3).
 - **Tables:** `@tanstack/react-table`.
 - **Toasts:** `sonner`.
-- **API:** NestJS modules with controller + service, data held in memory in the service, built-in Nest exceptions for errors. The web app calls it through `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:4000`).
+- **API:** NestJS modules with controller + service, data held in memory in the service, built-in Nest exceptions for errors. The web app calls `API_URL` from `apps/web/lib/api.ts`:
+  - `NEXT_PUBLIC_API_URL` set to an absolute URL: that API. `apps/web/.env.development` sets `http://localhost:4000` for `pnpm dev`.
+  - Unset (any plain `next build`, Vercel, the deploy button): **demo mode**, served by route handlers in `apps/web/app/api/` backed by `apps/web/lib/demo-api/store.ts`, an in-memory port of the NestJS services.
+  - **When you add or change an endpoint in `apps/api`, make the same change in `apps/web/lib/demo-api/store.ts` and add a route handler under `apps/web/app/api/`**, plus a test in `apps/web/lib/demo-api/__tests__/routes.test.ts`. Same path, request/response shape and error messages.
 - **States:** Every screen handles the states in its state matrix (loading, empty, error, success and the rest). Missing error and empty states are the most common miss.
 - **Accessibility:** Labels on every input, keyboard access, visible focus, errors announced. See `docs/accessibility-rules.md`.
 - **Types:** TypeScript `strict` with `noUncheckedIndexedAccess`. No `any`.
