@@ -90,6 +90,10 @@ examples/                 Docs for each worked example (README.md + review.md)
 docs/                     Architecture, getting started, Claude/Codex guides, rubric, accessibility rules
 ```
 
+## Next.js docs
+
+Next 16.4 ships its docs inside the package: `apps/web/node_modules/next/dist/docs/`. Check them before using a Next.js API you are unsure about. `apps/web/AGENTS.md` is generated and kept up to date by `next dev` (disable with `agentRules: false` in `next.config.mjs`); leave it committed.
+
 ## Conventions
 
 - **UI components:** shadcn/ui on **Base UI** (`@base-ui/react`), style **`base-nova`**, base color neutral, Lucide icons. Config is in `apps/web/components.json` and `packages/ui/components.json`.
